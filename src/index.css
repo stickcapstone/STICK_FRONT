@@ -1,0 +1,32 @@
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Noto+Sans+KR:wght@300;400;500;700&family=JetBrains+Mono:wght@400;600&display=swap');
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --bg:     #07090d;
+  --surf:   #0e1218;
+  --surf2:  #141a22;
+  --brd:    #1c2430;
+  --accent: #3b82f6;
+  --aglow:  rgba(59, 130, 246, 0.12);
+  --red:    #ef4444;
+  --yel:    #f59e0b;
+  --grn:    #10b981;
+  --txt:    #e2e8f0;
+  --muted:  #64748b;
+  --error:  #ff0000;
+  --fdisp:  'Bebas Neue', sans-serif;
+  --fbody:  'Noto Sans KR', sans-serif;
+  --fmono:  'JetBrains Mono', monospace;
+}
+
+body {
+  background: var(--bg);
+  color: var(--txt);
+  font-family: var(--fbody);
+  overflow-x: hidden;
+}
