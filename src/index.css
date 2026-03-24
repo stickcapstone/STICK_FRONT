@@ -24,6 +24,17 @@
   --fmono:  'JetBrains Mono', monospace;
 }
 
+[data-theme="dark"] {
+  --bg: #020617;
+  --txt: #e2e8f0;
+  --muted: #94a3b8;
+  --surf: #020617;
+  --surf2: #0f172a;
+  --brd: #1e293b;
+  --accent: #3b82f6;
+  --error:  #ff0000;
+}
+
 body {
   background: var(--bg);
   color: var(--txt);

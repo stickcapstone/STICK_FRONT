@@ -1,7 +1,7 @@
 import styles from "./Navbar.module.css";
 
 export default function Navbar({ page, setPage }) {
-  const tabs = ["분석", "결과", "신뢰도 피드"];
+  const tabs = ["분석", "결과", "신뢰도 피드", "이미지 분석"];
 
   return (
     <nav className={styles.nav}>

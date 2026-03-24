@@ -1,9 +1,11 @@
 import { useState } from "react";
 import Navbar from "./components/Navbar";
-import Page1  from "./components/Page1";
-import Page2  from "./components/Page2";
+import Page1  from "./components/main/Page1";
+import Page2  from "./components/analyst/Page2";
 import Page3  from "./components/Page3";
 import "./index.css";
+import Page1Button from "./components/main/Page1.button";
+import Page4 from "./components/Page4";
 
 function App() {
   const [page, setPage] = useState(1);
@@ -18,8 +20,10 @@ function App() {
           onAnalyzeDone={() => setPage(2)}
         />
       )}
-      {page === 2 && <Page2 />}
+      {page === 2 && <Page2 onGoMain={() => setPage(1)}/>}
       {page === 3 && <Page3 />}
+      {page === 4 && <Page4 onAnalyzeDone={() => setPage(2)}/>}
+      <Page1Button />
     </>
   )
 }

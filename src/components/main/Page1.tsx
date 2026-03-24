@@ -1,14 +1,14 @@
 import { useEffect, useRef, useState } from "react";
-import { ANALYSIS_STEPS } from "../data/data";
+import { ANALYSIS_STEPS } from "../../data/data";
 import styles from "./Page1.module.css";
 
-export default function Page1({ onGoFeed, onAnalyzeDone }) {
+export default function Page1({ onGoFeed, onAnalyzeDone }: { onGoFeed: () => void; onAnalyzeDone: () => void }) {
   const [url, setUrl]         = useState("");
   const [focused, setFocused] = useState(false);
   const [loading, setLoading] = useState(false);
   const [pct, setPct]         = useState(0);
   const [status, setStatus]   = useState("");
-  const [error, setError]     = useState(" ")
+  const [error, setError]     = useState("")
 
   const inputRef = useRef<HTMLInputElement>(null);
   useEffect(() => {
@@ -55,8 +55,8 @@ export default function Page1({ onGoFeed, onAnalyzeDone }) {
         }, 500);
         return;
       }
-      setPct(ANALYSIS_STEPS[i][0]);
-      setStatus(ANALYSIS_STEPS[i][1]);
+      setPct(Number(ANALYSIS_STEPS[i][0]));
+      setStatus(String(ANALYSIS_STEPS[i][1]));
       i++;
     }, 550);
   }

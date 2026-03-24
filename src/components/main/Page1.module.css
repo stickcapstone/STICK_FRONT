@@ -85,7 +85,7 @@
   outline: none;
   color: var(--txt);
   font-family: var(--fmono);
-  font-size: 12px;
+  font-size: 11px;
   padding: 16px 0;
 }
 .input::placeholder { color: var(--muted); }
@@ -142,7 +142,7 @@
 
 .error {
   margin-top: 8px;
-  min-height: 20px;
+  min-height: 1.4em;
   font-family: var(--fmono);
   font-size: 15px;
   color: var(--error);
@@ -174,4 +174,33 @@
   border-color: var(--accent);
   color: var(--txt);
   transform: translateY(-2px);
+}
+
+.themeToggle {
+  position: fixed;
+  bottom: 32px;
+  right: 32px;
+
+  width: 52px;
+  height: 52px;
+
+  border-radius: 50%;
+  background: var(--surf);
+  border: 1px solid var(--brd);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 18px;
+  color: var(--txt);
+
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.themeToggle:hover {
+  transform: translateY(-3px);
+  border-color: var(--accent);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.15);
 }

@@ -1,27 +1,28 @@
-import { BREAKDOWN, LINKS, REC_ARTICLES, RESULT_SCORE } from "../data/data";
+import { BREAKDOWN, LINKS, REC_ARTICLES, RESULT_SCORE } from "../../data/data";
+import Page2Button from "./Page2.button";
 import styles from "./Page2.module.css";
 
 /* helpers */
-function getDonutOffset(score) {
+function getDonutOffset(score: number) {
   return 377 - (score / 100) * 377;
 }
-function getScoreColor(score) {
+function getScoreColor(score: number) {
   if (score >= 75) return "var(--grn)";
   if (score >= 50) return "var(--yel)";
   return "var(--red)";
 }
-function getVerdictCls(score) {
+function getVerdictCls(score: number) {
   if (score >= 75) return styles.verdictG;
   if (score >= 50) return styles.verdictY;
   return styles.verdictR;
 }
-function getVerdictLabel(score) {
+function getVerdictLabel(score: number) {
   if (score >= 75) return "✅ 신뢰 가능";
   if (score >= 50) return "⚠️ 주의 필요";
   return "🔴 위험";
 }
 
-function DonutRing({ score }) {
+function DonutRing({ score }: { score: number }) {
   const color = getScoreColor(score);
   return (
     <div className={styles.donut}>
@@ -40,7 +41,11 @@ function DonutRing({ score }) {
   );
 }
 
-export default function Page2() {
+interface Props {
+  onGoMain: () => void;
+}
+
+export default function Page2({ onGoMain } : Props) {
   const score = RESULT_SCORE;
 
   return (
@@ -57,7 +62,7 @@ export default function Page2() {
           <div className={styles.urlChip}>
             news.example.com/article/<br />government-policy-2024
           </div>
-          
+          <Page2Button onGoMain = { onGoMain }/>
         </div>
 
         {/* ── Right: detail cards ── */}

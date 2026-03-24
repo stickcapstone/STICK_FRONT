@@ -227,3 +227,22 @@
   line-height: 1.6;
   color: var(--txt);
 }
+
+.reAnalyze {
+  background: var(--accent);
+  border: none;
+  color: #fff;
+  font-family: var(--fbody);
+  font-weight: 700;
+  font-size: 12px;
+  padding: 0 24px;
+  cursor: pointer;
+  border-radius: 10px;
+  height: 1.8em;
+  margin-top: 7%;
+  transition: background 0.18s;
+}
+
+.reAnalyze:hover {
+  background: #2563eb; 
+}
