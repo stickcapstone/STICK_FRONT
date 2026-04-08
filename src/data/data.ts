@@ -26,6 +26,8 @@ export const FEED_ITEMS = [
   { cat: "건강", outlet: "메디컬투데이", score: 96, bg: "linear-gradient(135deg,#180a0a,#200000)", icon: "🏥", title: "질병관리청, 독감 유행주의보 전국 확대 발령 — 예방접종 권고", time: "8시간 전" },
   { cat: "국제", outlet: "KBS",        score: 85, bg: "linear-gradient(135deg,#0a160a,#081a0e)", icon: "🌍", title: "G20 정상회의, 기후변화 대응 공동선언문 채택 — 탄소중립 가속화", time: "어제" },
   { cat: "경제", outlet: "조선비즈",   score: 89, bg: "linear-gradient(135deg,#140a18,#1c0024)", icon: "📊", title: "삼성전자 3분기 실적 발표 — 반도체 사업 흑자전환 공식 확인",  time: "어제" },
+  { cat: "정치", outlet: "스틱뉴스",   score: 50, bg: "linear-gradient(135deg,#0a1628,#081c10)", icon: "🏛️", title: "테스트1",  time: "오늘" },
+  { cat: "국제", outlet: "테스트뉴스",   score: 30, bg: "linear-gradient(135deg,#0a1628,#081c10)", icon: "🌍", title: "테스트2",  time: "오늘", url: "https://news.kbs.co.kr/news/pc/view/view.do?ncd=1781301" }
 ];
 
 export const ANALYSIS_STEPS = [

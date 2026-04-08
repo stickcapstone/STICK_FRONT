@@ -61,6 +61,18 @@
   gap: 14px;
 }
 
+.empty {
+  grid-column: 1 / -1;
+  padding: 32px 20px;
+  text-align: center;
+  font-family: var(--fbody);
+  font-size: 16px;
+  color: var(--muted);
+  border: 1px dashed var(--brd);
+  border-radius: 12px;
+  background: rgba(15, 20, 28, 0.35);
+}
+
 .card {
   background: var(--surf);
   border: 1px solid var(--brd);
@@ -123,9 +135,24 @@
   font-weight: 600;
   padding: 3px 10px;
   border-radius: 99px;
-  background: rgba(16, 185, 129, 0.1);
+}
+
+.badgeGood {
+  background: rgba(16, 185, 129, 0.12);
   color: var(--grn);
-  border: 1px solid rgba(16, 185, 129, 0.22);
+  border: 1px solid rgba(16, 185, 129, 0.28);
+}
+
+.badgeWarn {
+  background: rgba(234, 179, 8, 0.14);
+  color: #f59e0b;
+  border: 1px solid rgba(234, 179, 8, 0.28);
+}
+
+.badgeDanger {
+  background: rgba(239, 68, 68, 0.14);
+  color: #ef4444;
+  border: 1px solid rgba(239, 68, 68, 0.28);
 }
 
 /* body */
@@ -163,4 +190,6 @@
   color: var(--muted);
 }
 
-.statusG { color: var(--grn); }
+.statusGood { color: var(--grn); }
+.statusWarn { color: #f59e0b; }
+.statusDanger { color: #ef4444; }
