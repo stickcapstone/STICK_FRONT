@@ -1,31 +1,40 @@
 import { useState } from "react";
-import Navbar from "./components/Navbar";
-import Page1  from "./components/main/Page1";
-import Page2  from "./components/analyst/Page2";
-import Page3  from "./components/Page3";
-import "./index.css";
-import Page1Button from "./components/main/Page1.button";
-import Page4 from "./components/Page4";
+import Navbar from "./components/layout/Navbar";
+import LinkAnalysisPage from "./pages/analyst/link/LinkAnalysisPage";
+import ImageAnalysisPage from "./pages/analyst/image/ImageAnalysisPage";
+import FeedPage from "./pages/feed/FeedPage";
+import ThemeToggleButton from "./pages/main/ThemeToggleButton";
+import MainPage from "./pages/main/MainPage";
+import { LINK_ANALYSIS_RESULT } from "./data/data";
+
+type Page = 1 | 2 | 3 | 4;
 
 function App() {
-  const [page, setPage] = useState(1);
+  const [page, setPage] = useState<Page>(1);
+  const [analyzedUrl, setAnalyzedUrl] = useState(LINK_ANALYSIS_RESULT.analyzedUrl);
 
   return (
-    <>
+    <div className="min-h-screen bg-base text-text">
       <Navbar page={page} setPage={setPage} />
 
       {page === 1 && (
-        <Page1
+        <MainPage
+          onAnalyzeDone={(url) => {
+            setAnalyzedUrl(url);
+            setPage(2);
+          }}
           onGoFeed={() => setPage(3)}
-          onAnalyzeDone={() => setPage(2)}
         />
       )}
-      {page === 2 && <Page2 onGoMain={() => setPage(1)}/>}
-      {page === 3 && <Page3 />}
-      {page === 4 && <Page4 onAnalyzeDone={() => setPage(2)}/>}
-      <Page1Button />
-    </>
-  )
+      {page === 2 && (
+        <LinkAnalysisPage analyzedUrl={analyzedUrl} onGoMain={() => setPage(1)} />
+      )}
+      {page === 3 && <FeedPage />}
+      {page === 4 && <ImageAnalysisPage onAnalyzeDone={() => setPage(2)} />}
+
+      <ThemeToggleButton />
+    </div>
+  );
 }
 
-export default App
+export default App;
