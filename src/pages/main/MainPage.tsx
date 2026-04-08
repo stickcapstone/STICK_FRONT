@@ -90,11 +90,12 @@ export default function MainPage({ onGoFeed, onAnalyzeDone }: MainPageProps) {
       />
 
       <div className="relative z-10 w-full max-w-[600px] text-center">
-        <MainHeroSection error={error} />
+        <MainHeroSection/>
         <UrlAnalysisSection
           focused={focused}
           inputRef={inputRef}
           loading={loading}
+          error={error}
           onAnalyze={analyze}
           onBlur={() => setFocused(false)}
           onChangeURL={onChangeURL}
