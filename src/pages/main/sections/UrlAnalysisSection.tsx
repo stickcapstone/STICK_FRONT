@@ -7,6 +7,7 @@ interface UrlAnalysisSectionProps {
   status: string;
   url: string;
   inputRef: RefObject<HTMLInputElement | null>;
+  error:string
   onAnalyze: () => void;
   onBlur: () => void;
   onChangeURL: (nextUrl: string) => void;
@@ -20,6 +21,7 @@ export default function UrlAnalysisSection({
   status,
   url,
   inputRef,
+  error,
   onAnalyze,
   onBlur,
   onChangeURL,
@@ -66,6 +68,11 @@ export default function UrlAnalysisSection({
           분석 시작
         </button>
       </div>
+
+      <p className="mt-5 font-mono text-[11px] text-muted/70">
+        뉴스 기사, 블로그, SNS 링크까지 모두 분석할 수 있습니다.
+      </p>
+      <p className="mt-2 min-h-6 font-mono text-sm text-danger">{error}</p>
 
       {loading && (
         <div className="mx-auto mb-1 w-full max-w-[540px]">
