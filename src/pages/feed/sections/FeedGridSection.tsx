@@ -6,59 +6,103 @@ interface FeedGridSectionProps {
   items: FeedItem[];
 }
 
-function getScoreLabel(score: number) {
-  if (score >= 80) {
-    return "신뢰";
-  }
-
-  if (score >= 50) {
-    return "주의";
-  }
-
-  return "위험";
+function getReliability(score: number) {
+  if (score <= 49) return {
+    label: "위험",
+    color: "#ef4444",
+    pillClass: "bg-[rgba(239,68,68,0.12)] text-[#ef4444] border border-[rgba(239,68,68,0.3)]",
+    barClass: "bg-[#ef4444]",
+  };
+  if (score <= 79) return {
+    label: "주의",
+    color: "#f59e0b",
+    pillClass: "bg-[rgba(245,158,11,0.12)] text-[#f59e0b] border border-[rgba(245,158,11,0.3)]",
+    barClass: "bg-[#f59e0b]",
+  };
+  return {
+    label: "신뢰",
+    color: "#10b981",
+    pillClass: "bg-[rgba(16,185,129,0.12)] text-[#10b981] border border-[rgba(16,185,129,0.3)]",
+    barClass: "bg-[#10b981]",
+  };
 }
 
 export default function FeedGridSection({ items }: FeedGridSectionProps) {
+  if (items.length === 0) {
+    return (
+      <div className="px-5 py-8 text-center text-[15px] text-[var(--muted)] border border-dashed border-[var(--brd)] rounded-xl bg-[rgba(15,20,28,0.35)]">
+        표시할 기사가 없습니다.
+      </div>
+    );
+  }
+
   return (
-    <section className="mx-auto max-w-7xl">
-      <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-        {items.map((item) => (
+    <div className="grid grid-cols-3 gap-4">
+      {items.map((item, i) => {
+        const rel = getReliability(item.score);
+        return (
           <article
-            className="group overflow-hidden rounded-3xl border border-border bg-panel transition hover:-translate-y-1 hover:border-slate-700"
-            key={`${item.outlet}-${item.title}`}
+            key={i}
+            className="bg-[var(--surf)] rounded-[14px] overflow-hidden transition-all duration-200 hover:-translate-y-[3px] shadow-[0_8px_32px_rgba(140,155,185,0.28)]"
           >
+            {/* 포스트 헤더 */}
+            <div className="flex items-center gap-[9px] px-3 py-2.5">
+              <div className="flex flex-col gap-px flex-1 min-w-0">
+                <span className="text-[13px] font-bold text-[var(--txt)] whitespace-nowrap overflow-hidden text-ellipsis">
+                  {item.outlet}
+                </span>
+                <span className="[font-family:var(--fmono)] text-[10px] text-[var(--muted)] tracking-[1px]">
+                  {item.cat}
+                </span>
+              </div>
+              <span className={`[font-family:var(--fmono)] text-[10px] font-semibold px-2.5 py-[3px] rounded-full tracking-[1px] shrink-0 ${rel.pillClass}`}>
+                {rel.label}
+              </span>
+            </div>
+
+            {/* 이미지 */}
             <div
-              className="relative flex h-36 items-center justify-center overflow-hidden"
+              className="w-full aspect-square relative flex items-center justify-center overflow-hidden"
               style={{ background: item.bg }}
             >
-              <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-panel/90" />
-              <span className="relative z-10 font-display text-4xl tracking-[0.2em] text-white/85">
+              <div className="absolute inset-0 bg-gradient-to-b from-transparent to-[rgba(8,12,20,0.88)]" />
+              <span className="text-[72px] relative z-[1] drop-shadow-[0_4px_20px_rgba(0,0,0,0.5)]">
                 {item.icon}
               </span>
-              <div className="absolute bottom-3 left-3 z-10 rounded-md border border-white/10 bg-black/45 px-2 py-1 font-mono text-[9px] uppercase tracking-[0.15em] text-slate-300 backdrop-blur-md">
-                {item.cat}
-              </div>
-              <div className="absolute right-3 top-3 z-10 rounded-full border border-success/25 bg-success/10 px-3 py-1 font-mono text-[11px] font-semibold text-success">
-                {item.score}%
+
+              {/* 점수 오버레이 */}
+              <div className="absolute bottom-[14px] left-[14px] right-[14px] z-[2]">
+                <div className="[font-family:var(--fmono)] text-[9px] tracking-[2px] text-white/55 uppercase mb-0.5">
+                  신뢰도
+                </div>
+                <div
+                  className="[font-family:var(--fdisp)] text-[30px] font-black leading-none mb-[5px]"
+                  style={{ color: rel.color }}
+                >
+                  {item.score}
+                </div>
+                <div className="h-[3px] bg-white/12 rounded-full overflow-hidden">
+                  <div
+                    className={`h-full rounded-full transition-all duration-500 ${rel.barClass}`}
+                    style={{ width: `${item.score}%` }}
+                  />
+                </div>
               </div>
             </div>
 
-            <div className="p-4">
-              <div className="mb-2 flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.18em] text-accent">
-                <span className="text-success">Verified</span>
-                {item.outlet}
-              </div>
-              <div className="mb-3 text-sm font-semibold leading-6 text-text transition group-hover:text-white">
+            {/* 캡션 */}
+            <div className="px-3 pt-2.5 pb-3.5">
+              <p className="text-[12px] leading-[1.65] text-[var(--txt)] mb-1.5 line-clamp-3">
+                <span className="font-bold">{item.outlet}</span>{" "}
                 {item.title}
-              </div>
-              <div className="flex items-center justify-between font-mono text-[10px] text-muted">
-                <span>{item.time}</span>
-                <span className="text-success">{getScoreLabel(item.score)}</span>
-              </div>
+              </p>
+              <span className="[font-family:var(--fmono)] text-[9px] text-[var(--muted)] tracking-[1px] uppercase">
+                {item.time}
+              </span>
             </div>
           </article>
-        ))}
-      </div>
-    </section>
+        );
+      })}
+    </div>
   );
 }
