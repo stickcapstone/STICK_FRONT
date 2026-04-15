@@ -4,7 +4,13 @@ export default function ThemeToggleButton() {
   const [dark, setDark] = useState(false);
 
   useEffect(() => {
-    document.documentElement.setAttribute("data-theme", dark ? "dark" : "light");
+    const html = document.documentElement;
+    html.classList.add("theme-transitioning");
+    html.setAttribute("data-theme", dark ? "dark" : "light");
+    const timer = window.setTimeout(() => {
+      html.classList.remove("theme-transitioning");
+    }, 300);
+    return () => window.clearTimeout(timer);
   }, [dark]);
 
   return (
