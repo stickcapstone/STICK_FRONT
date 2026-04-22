@@ -4,6 +4,10 @@ import ImageAnalyzeActionSection from "./sections/ImageAnalyzeActionSection";
 import ImageHeroSection from "./sections/ImageHeroSection";
 import ImageUploadSection from "./sections/ImageUploadSection";
 import VideoUploadSection from "../video/sections/VideoUploadSection";
+import VideoAnalysisResultSection, {
+  type VideoAnalysisResult,
+} from "../video/sections/VideoAnalysisResultSection";
+import api from "../../../share/hooks/api";
 
 type Mode = "image" | "video";
 
@@ -20,15 +24,6 @@ const IMAGE_STEPS = [
   [100, "분석 완료!"],
 ] as const;
 
-const VIDEO_STEPS = [
-  [15, "영상 업로드 확인 중.."],
-  [30, "프레임 추출 중.."],
-  [50, "프레임 분석 중.."],
-  [65, "음성 분석 중.."],
-  [80, "조작 여부 탐지 중.."],
-  [92, "팩트체크 데이터베이스 대조 중.."],
-  [100, "분석 완료!"],
-] as const;
 
 export default function ImageAnalysisPage({ onAnalyzeDone }: Props) {
   const [mode, setMode] = useState<Mode>("image");
@@ -38,6 +33,8 @@ export default function ImageAnalysisPage({ onAnalyzeDone }: Props) {
   const [loading, setLoading] = useState(false);
   const [pct, setPct] = useState(0);
   const [status, setStatus] = useState("");
+  const [videoResult, setVideoResult] = useState<VideoAnalysisResult | null>(null);
+  const [videoError, setVideoError] = useState<string | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -57,6 +54,8 @@ export default function ImageAnalysisPage({ onAnalyzeDone }: Props) {
     });
     setFile(null);
     setDragging(false);
+    setVideoResult(null);
+    setVideoError(null);
     if (inputRef.current) inputRef.current.value = "";
     setMode(nextMode);
   }
@@ -99,15 +98,37 @@ export default function ImageAnalysisPage({ onAnalyzeDone }: Props) {
     if (inputRef.current) inputRef.current.value = "";
   }
 
-  function analyze() {
+  async function analyze() {
     if (!file) return;
 
     setLoading(true);
-    let index = 0;
-    const STEPS = mode === "image" ? IMAGE_STEPS : VIDEO_STEPS;
+    setVideoResult(null);
+    setVideoError(null);
 
+    if (mode === "video") {
+      try {
+        const formData = new FormData();
+        formData.append("video", file);
+        const response = await api.post("/api/v1/video/analyze", formData, {
+          headers: { "Content-Type": "multipart/form-data" },
+          timeout: 180000,
+        });
+        if (response.data.success) {
+          setVideoResult(response.data.data);
+        } else {
+          setVideoError(response.data.message ?? "분석에 실패했습니다.");
+        }
+      } catch {
+        setVideoError("서버 연결에 실패했습니다. 다시 시도해주세요.");
+      } finally {
+        setLoading(false);
+      }
+      return;
+    }
+
+    let index = 0;
     const intervalId = window.setInterval(() => {
-      if (index >= STEPS.length) {
+      if (index >= IMAGE_STEPS.length) {
         window.clearInterval(intervalId);
         window.setTimeout(() => {
           setLoading(false);
@@ -117,8 +138,7 @@ export default function ImageAnalysisPage({ onAnalyzeDone }: Props) {
         }, 500);
         return;
       }
-
-      const [nextPct, nextStatus] = STEPS[index];
+      const [nextPct, nextStatus] = IMAGE_STEPS[index];
       setPct(nextPct);
       setStatus(nextStatus);
       index += 1;
@@ -194,6 +214,15 @@ export default function ImageAnalysisPage({ onAnalyzeDone }: Props) {
         )}
 
         <ImageAnalysisStatusSection loading={loading} pct={pct} status={status} />
+
+        {videoError && (
+          <div className="w-full rounded-2xl border border-red-500/30 bg-red-500/5 px-4 py-3 text-sm text-red-400">
+            {videoError}
+          </div>
+        )}
+
+        {videoResult && <VideoAnalysisResultSection result={videoResult} />}
+
         <ImageAnalyzeActionSection
           disabled={!file || loading}
           loading={loading}
