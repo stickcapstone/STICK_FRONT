@@ -11,7 +11,7 @@ import VideoUploadSection from "../video/sections/VideoUploadSection";
 
 export default function ImageAnalysisPage() {
   const {
-    mode, file, preview, dragging, loading, pct, status,
+    mode, file, preview, dragging, loading,
     serverError, result, inputRef,
     switchMode, onDrop, onChange, removeFile, analyze,
     retryAfterError, navigateHome,
@@ -20,7 +20,7 @@ export default function ImageAnalysisPage() {
   if (serverError !== null) {
     return (
       <Page500
-        message={serverError}
+        message={serverError}git br
         onRetry={retryAfterError}
         onGoMain={navigateHome}
       />
@@ -55,7 +55,7 @@ export default function ImageAnalysisPage() {
           : <VideoUploadSection {...uploadProps} />
         }
 
-        <ImageAnalysisStatusSection loading={loading} pct={pct} status={status} />
+        <ImageAnalysisStatusSection loading={loading} />
         <ImageAnalyzeActionSection disabled={!file || loading} loading={loading} onAnalyze={analyze} />
         {result && <ImageResultSection result={result} />}
       </div>

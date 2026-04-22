@@ -6,15 +6,6 @@ import { ServerError } from "../../../share/utils/errors";
 
 type Mode = "image" | "video";
 
-const VIDEO_STEPS = [
-  [15, "영상 업로드 확인 중.."],
-  [30, "프레임 추출 중.."],
-  [50, "프레임 분석 중.."],
-  [65, "음성 분석 중.."],
-  [80, "조작 여부 탐지 중.."],
-  [92, "팩트체크 데이터베이스 대조 중.."],
-  [100, "분석 완료!"],
-] as const;
 
 export function useImageAnalysis() {
   const navigate = useNavigate();
@@ -23,8 +14,6 @@ export function useImageAnalysis() {
   const [preview, setPreview] = useState<string | null>(null);
   const [dragging, setDragging] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [pct, setPct] = useState(0);
-  const [status, setStatus] = useState("");
   const [serverError, setServerError] = useState<string | null>(null);
   const [result, setResult] = useState<ImageAnalysisData | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -76,24 +65,9 @@ export function useImageAnalysis() {
   async function analyze() {
     if (!file) return;
 
-    if (mode === "video") {
-      setLoading(true);
-      let index = 0;
-      const intervalId = window.setInterval(() => {
-        if (index >= VIDEO_STEPS.length) {
-          window.clearInterval(intervalId);
-          window.setTimeout(() => { setLoading(false); setPct(0); setStatus(""); }, 500);
-          return;
-        }
-        const [nextPct, nextStatus] = VIDEO_STEPS[index];
-        setPct(nextPct);
-        setStatus(nextStatus);
-        index += 1;
-      }, 550);
-      return;
-    }
+    if (mode === "video") return;
 
-    setServerError(null);
+setServerError(null);
     setLoading(true);
     try {
       const res = await analyzeImage(file);
@@ -119,8 +93,6 @@ export function useImageAnalysis() {
     preview,
     dragging,
     loading,
-    pct,
-    status,
     serverError,
     result,
     inputRef,
