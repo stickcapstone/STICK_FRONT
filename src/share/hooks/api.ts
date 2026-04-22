@@ -31,6 +31,23 @@ export interface ImageAnalysisResponse {
   code: string;
 }
 
+export interface VideoAnalysisData {
+  fileName: string;
+  aiGenerated: boolean;
+  confidence: number;
+  verdict: string;
+  reason: string;
+  totalFrames: number;
+  aiFrames: number;
+}
+
+export interface VideoAnalysisResponse {
+  success: boolean;
+  data: VideoAnalysisData;
+  message: string;
+  code: string;
+}
+
 export function analyzeImage(file: File, onUploadProgress?: (pct: number) => void) {
   const formData = new FormData();
   formData.append("image", file);
@@ -45,5 +62,14 @@ export function analyzeImage(file: File, onUploadProgress?: (pct: number) => voi
   });
 }
 
-export default api;
+export function analyzeVideo(file: File) {
+  const formData = new FormData();
+  formData.append("video", file);
 
+  return api.post<VideoAnalysisResponse>("video/analyze", formData, {
+    headers: { "Content-Type": "multipart/form-data" },
+    timeout: 180000,
+  });
+}
+
+export default api;

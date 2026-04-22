@@ -1,18 +1,18 @@
 import type { DragEvent } from "react";
 import Page500 from "../../../share/errorPage/ErrorPage";
 import { useImageAnalysis } from "./useImageAnalysis";
-import ImageAnalysisStatusSection from "./sections/ImageAnalysisStatusSection";
 import ImageAnalyzeActionSection from "./sections/ImageAnalyzeActionSection";
 import ImageHeroSection from "./sections/ImageHeroSection";
 import ImageModeTabSection from "./sections/ImageModeTabSection";
 import ImageResultSection from "./sections/ImageResultSection";
 import ImageUploadSection from "./sections/ImageUploadSection";
 import VideoUploadSection from "../video/sections/VideoUploadSection";
+import VideoAnalysisResultSection from "../video/sections/VideoAnalysisResultSection";
 
 export default function ImageAnalysisPage() {
   const {
-    mode, file, preview, dragging, loading, pct, status,
-    serverError, result, inputRef,
+    mode, file, preview, dragging, loading,
+    serverError, result, videoResult, videoError, inputRef,
     switchMode, onDrop, onChange, removeFile, analyze,
     retryAfterError, navigateHome,
   } = useImageAnalysis();
@@ -55,9 +55,16 @@ export default function ImageAnalysisPage() {
           : <VideoUploadSection {...uploadProps} />
         }
 
-        <ImageAnalysisStatusSection loading={loading} pct={pct} status={status} />
-        <ImageAnalyzeActionSection disabled={!file || loading} loading={loading} onAnalyze={analyze} />
+        {videoError && (
+          <div className="w-full rounded-2xl border border-red-500/30 bg-red-500/5 px-4 py-3 text-sm text-red-400">
+            {videoError}
+          </div>
+        )}
+
+        {videoResult && <VideoAnalysisResultSection result={videoResult} />}
         {result && <ImageResultSection result={result} />}
+
+        <ImageAnalyzeActionSection disabled={!file || loading} loading={loading} onAnalyze={analyze} />
       </div>
     </div>
   );
