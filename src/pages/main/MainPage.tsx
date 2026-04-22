@@ -1,13 +1,9 @@
 import { useEffect, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { ANALYSIS_STEPS } from "../../data/data";
 import FeedShortcutSection from "./sections/FeedShortcutSection";
 import MainHeroSection from "./sections/MainHeroSection";
 import UrlAnalysisSection from "./sections/UrlAnalysisSection";
-
-interface MainPageProps {
-  onGoFeed: () => void;
-  onAnalyzeDone: (url: string) => void;
-}
 
 function isValidHttpUrl(value: string) {
   try {
@@ -18,7 +14,8 @@ function isValidHttpUrl(value: string) {
   }
 }
 
-export default function MainPage({ onGoFeed, onAnalyzeDone }: MainPageProps) {
+export default function MainPage() {
+  const navigate = useNavigate();
   const [url, setUrl] = useState("");
   const [focused, setFocused] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -67,7 +64,7 @@ export default function MainPage({ onGoFeed, onAnalyzeDone }: MainPageProps) {
           setLoading(false);
           setPct(0);
           setStatus("");
-          onAnalyzeDone(url.trim());
+          navigate(`/result?url=${encodeURIComponent(url.trim())}`);
         }, 500);
         return;
       }
@@ -90,7 +87,7 @@ export default function MainPage({ onGoFeed, onAnalyzeDone }: MainPageProps) {
       />
 
       <div className="relative z-10 w-full max-w-[600px] text-center">
-        <MainHeroSection/>
+        <MainHeroSection />
         <UrlAnalysisSection
           focused={focused}
           inputRef={inputRef}
@@ -106,7 +103,7 @@ export default function MainPage({ onGoFeed, onAnalyzeDone }: MainPageProps) {
         />
       </div>
 
-      <FeedShortcutSection onGoFeed={onGoFeed} />
+      <FeedShortcutSection />
     </div>
   );
 }

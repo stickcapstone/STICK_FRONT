@@ -1,12 +1,14 @@
-import { BREAKDOWN } from "../../../../data/data";
+import type { BreakdownItem } from "../../../../data/data";
 import { getToneMeta } from "./linkAnalysisUtils";
 
 interface BreakdownSectionProps {
+  items: BreakdownItem[];
   openItemId: string;
   onToggle: (id: string) => void;
 }
 
 export default function BreakdownSection({
+  items,
   openItemId,
   onToggle,
 }: BreakdownSectionProps) {
@@ -20,7 +22,7 @@ export default function BreakdownSection({
       </p>
 
       <div className="space-y-3">
-        {BREAKDOWN.map((item) => {
+        {items.map((item) => {
           const toneMeta = getToneMeta(item.tone);
           const isOpen = openItemId === item.id;
 

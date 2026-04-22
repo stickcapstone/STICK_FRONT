@@ -1,12 +1,9 @@
 import { useEffect, useRef, useState, type ChangeEvent, type DragEvent } from "react";
+import { useNavigate } from "react-router-dom";
 import ImageAnalysisStatusSection from "./sections/ImageAnalysisStatusSection";
 import ImageAnalyzeActionSection from "./sections/ImageAnalyzeActionSection";
 import ImageHeroSection from "./sections/ImageHeroSection";
 import ImageUploadSection from "./sections/ImageUploadSection";
-
-interface Props {
-  onAnalyzeDone: () => void;
-}
 
 const STEPS = [
   [15, "이미지 업로드 확인 중.."],
@@ -17,7 +14,8 @@ const STEPS = [
   [100, "분석 완료!"],
 ] as const;
 
-export default function ImageAnalysisPage({ onAnalyzeDone }: Props) {
+export default function ImageAnalysisPage() {
+  const navigate = useNavigate();
   const [file, setFile] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
   const [dragging, setDragging] = useState(false);
@@ -96,7 +94,7 @@ export default function ImageAnalysisPage({ onAnalyzeDone }: Props) {
           setLoading(false);
           setPct(0);
           setStatus("");
-          onAnalyzeDone();
+          navigate("/result");
         }, 500);
         return;
       }
