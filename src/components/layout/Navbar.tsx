@@ -3,7 +3,7 @@ interface NavbarProps {
   setPage: (page: 1 | 2 | 3 | 4) => void;
 }
 
-const tabs = ["분석", "결과", "피드", "이미지 분석"] as const;
+const tabs = ["분석", "결과", "피드", "AI 분석"] as const;
 
 export default function Navbar({ page, setPage }: NavbarProps) {
   return (
