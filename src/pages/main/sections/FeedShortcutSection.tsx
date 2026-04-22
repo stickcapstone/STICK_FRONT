@@ -1,12 +1,12 @@
-interface FeedShortcutSectionProps {
-  onGoFeed: () => void;
-}
+import { useNavigate } from "react-router-dom";
 
-export default function FeedShortcutSection({ onGoFeed }: FeedShortcutSectionProps) {
+export default function FeedShortcutSection() {
+  const navigate = useNavigate();
+
   return (
     <button
       className="mt-12 inline-flex items-center gap-2 rounded-full border border-border bg-panel px-6 py-3 text-sm text-muted transition hover:-translate-y-0.5 hover:border-accent hover:text-text sm:absolute sm:bottom-9 sm:mt-0"
-      onClick={onGoFeed}
+      onClick={() => navigate("/feed")}
       type="button"
     >
       <svg

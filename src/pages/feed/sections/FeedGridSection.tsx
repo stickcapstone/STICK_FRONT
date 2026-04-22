@@ -1,6 +1,4 @@
-import type { FEED_ITEMS } from "../../../data/data";
-
-type FeedItem = (typeof FEED_ITEMS)[number];
+import type { FeedItem } from "../../../data/data";
 
 interface FeedGridSectionProps {
   items: FeedItem[];
@@ -45,7 +43,6 @@ export default function FeedGridSection({ items }: FeedGridSectionProps) {
             key={i}
             className="bg-[var(--surf)] rounded-[14px] overflow-hidden transition-all duration-200 hover:-translate-y-[3px] shadow-[0_8px_32px_rgba(140,155,185,0.28)]"
           >
-            {/* 포스트 헤더 */}
             <div className="flex items-center gap-[9px] px-3 py-2.5">
               <div className="flex flex-col gap-px flex-1 min-w-0">
                 <span className="text-[13px] font-bold text-[var(--txt)] whitespace-nowrap overflow-hidden text-ellipsis">
@@ -60,7 +57,6 @@ export default function FeedGridSection({ items }: FeedGridSectionProps) {
               </span>
             </div>
 
-            {/* 이미지 */}
             <div
               className="w-full aspect-square relative flex items-center justify-center overflow-hidden"
               style={{ background: item.bg }}
@@ -70,7 +66,6 @@ export default function FeedGridSection({ items }: FeedGridSectionProps) {
                 {item.icon}
               </span>
 
-              {/* 점수 오버레이 */}
               <div className="absolute bottom-[14px] left-[14px] right-[14px] z-[2]">
                 <div className="[font-family:var(--fmono)] text-[9px] tracking-[2px] text-white/55 uppercase mb-0.5">
                   신뢰도
@@ -90,7 +85,6 @@ export default function FeedGridSection({ items }: FeedGridSectionProps) {
               </div>
             </div>
 
-            {/* 캡션 */}
             <div className="px-3 pt-2.5 pb-3.5">
               <p className="text-[12px] leading-[1.65] text-[var(--txt)] mb-1.5 line-clamp-3">
                 <span className="font-bold">{item.outlet}</span>{" "}

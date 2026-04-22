@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from "react";
-import { FEED_ITEMS, FILTERS } from "../../data/data";
+import { FILTERS } from "../../data/data";
+import type { FeedItem } from "../../data/data";
 import FeedHeaderSection from "./sections/FeedHeaderSection";
 import FeedGridSection from "./sections/FeedGridSection";
 
@@ -12,7 +13,9 @@ export default function FeedPage() {
   const [cursor, setCursor] = useState(PAGE_SIZE);
   const sentinelRef = useRef<HTMLDivElement>(null);
 
-  const all = filter === "전체" ? FEED_ITEMS : FEED_ITEMS.filter((f) => f.cat === filter);
+  const items: FeedItem[] = [];
+
+  const all = filter === "전체" ? items : items.filter((f) => f.cat === filter);
   const visible = all.slice(0, cursor);
   const hasMore = cursor < all.length;
 
@@ -47,7 +50,6 @@ export default function FeedPage() {
 
         <FeedGridSection items={visible} />
 
-        {/* 무한 스크롤 sentinel */}
         <div ref={sentinelRef} className="h-12 flex items-center justify-center">
           {hasMore && (
             <span className="[font-family:var(--fmono)] text-xl tracking-[6px] text-[var(--muted)] animate-[loading-pulse_1.2s_ease-in-out_infinite]">
