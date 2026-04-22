@@ -1,10 +1,6 @@
 import ReanalyzeButton from "../ReanalyzeButton";
 
-interface ResultGuideSectionProps {
-  onGoMain: () => void;
-}
-
-export default function ResultGuideSection({ onGoMain }: ResultGuideSectionProps) {
+export default function ResultGuideSection() {
   return (
     <aside className="h-fit rounded-[28px] border border-border bg-panel p-6 xl:sticky xl:top-[88px]">
       <div className="mb-3 font-mono text-[10px] uppercase tracking-[0.2em] text-accent">
@@ -17,7 +13,7 @@ export default function ResultGuideSection({ onGoMain }: ResultGuideSectionProps
       </div>
 
       <div className="mt-6">
-        <ReanalyzeButton onGoMain={onGoMain} />
+        <ReanalyzeButton />
       </div>
     </aside>
   );

@@ -1,20 +1,25 @@
 import { useEffect, useState } from "react";
-import { BREAKDOWN, EVIDENCE_LINKS, LINK_ANALYSIS_RESULT, SIMILAR_LINKS } from "../../../data/data";
+import { useSearchParams } from "react-router-dom";
+import type { BreakdownItem, ExternalLinkItem, RecommendedArticle } from "../../../data/data";
 import BreakdownSection from "./sections/BreakdownSection";
 import ExternalLinkGridSection from "./sections/ExternalLinkGridSection";
 import LinkResultSummarySection from "./sections/LinkResultSummarySection";
 import RecommendedArticlesSection from "./sections/RecommendedArticlesSection";
 import ResultGuideSection from "./sections/ResultGuideSection";
 
-interface Props {
-  analyzedUrl: string;
-  onGoMain: () => void;
-}
+export default function LinkAnalysisPage() {
+  const [searchParams] = useSearchParams();
+  const analyzedUrl = searchParams.get("url") ?? "";
 
-export default function LinkAnalysisPage({ analyzedUrl, onGoMain }: Props) {
-  const finalScore = LINK_ANALYSIS_RESULT.score;
+  const finalScore = 0;
+  const summary = "";
+  const breakdown: BreakdownItem[] = [];
+  const evidenceLinks: ExternalLinkItem[] = [];
+  const similarLinks: ExternalLinkItem[] = [];
+  const recArticles: RecommendedArticle[] = [];
+
   const [displayedScore, setDisplayedScore] = useState(0);
-  const [openItemId, setOpenItemId] = useState(BREAKDOWN[0]?.id ?? "");
+  const [openItemId, setOpenItemId] = useState("");
 
   useEffect(() => {
     let frameId = 0;
@@ -40,20 +45,26 @@ export default function LinkAnalysisPage({ analyzedUrl, onGoMain }: Props) {
   return (
     <div className="min-h-screen px-6 pb-16 pt-20 animate-[fade-up_.28s_ease] lg:px-12">
       <div className="mx-auto flex max-w-7xl flex-col gap-5">
-        <LinkResultSummarySection analyzedUrl={analyzedUrl} displayedScore={displayedScore} />
+        <LinkResultSummarySection
+          analyzedUrl={analyzedUrl}
+          displayedScore={displayedScore}
+          finalScore={finalScore}
+          summary={summary}
+        />
 
         <div className="grid gap-5 xl:grid-cols-[minmax(0,1fr)_320px]">
           <div className="space-y-5">
             <BreakdownSection
+              items={breakdown}
               onToggle={(id) => setOpenItemId((current) => (current === id ? "" : id))}
               openItemId={openItemId}
             />
-            <ExternalLinkGridSection items={EVIDENCE_LINKS} title="근거 링크" />
-            <ExternalLinkGridSection items={SIMILAR_LINKS} title="유사 정보 링크" />
-            <RecommendedArticlesSection />
+            <ExternalLinkGridSection items={evidenceLinks} title="근거 링크" />
+            <ExternalLinkGridSection items={similarLinks} title="유사 정보 링크" />
+            <RecommendedArticlesSection articles={recArticles} />
           </div>
 
-          <ResultGuideSection onGoMain={onGoMain} />
+          <ResultGuideSection />
         </div>
       </div>
     </div>

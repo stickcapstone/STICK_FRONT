@@ -1,10 +1,3 @@
-export class serverError extends Error {
-  constructor(message: string) {
-    super(message);
-    this.name = "serverError";
-  }
-}
-
 interface Page500Props {
   onGoMain?: () => void;
   onRetry?: () => void;

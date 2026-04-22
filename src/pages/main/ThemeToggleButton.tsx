@@ -1,12 +1,18 @@
 import { useEffect, useState } from "react";
 
 export default function ThemeToggleButton() {
-  const [dark, setDark] = useState(false);
+  const [dark, setDark] = useState(() => {
+    const saved = localStorage.getItem("theme");
+    if (saved) return saved === "dark";
+    return window.matchMedia("(prefers-color-scheme: dark)").matches;
+  });
 
   useEffect(() => {
     const html = document.documentElement;
     html.classList.add("theme-transitioning");
     html.setAttribute("data-theme", dark ? "dark" : "light");
+    localStorage.setItem("theme", dark ? "dark" : "light");
+
     const timer = window.setTimeout(() => {
       html.classList.remove("theme-transitioning");
     }, 300);

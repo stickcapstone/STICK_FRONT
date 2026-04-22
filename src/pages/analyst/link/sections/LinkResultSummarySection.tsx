@@ -1,16 +1,18 @@
-import { LINK_ANALYSIS_RESULT } from "../../../../data/data";
 import { getScoreLabel, getScoreTone, getToneMeta } from "./linkAnalysisUtils";
 
 interface LinkResultSummarySectionProps {
   analyzedUrl: string;
   displayedScore: number;
+  finalScore: number;
+  summary: string;
 }
 
 export default function LinkResultSummarySection({
   analyzedUrl,
   displayedScore,
+  finalScore,
+  summary,
 }: LinkResultSummarySectionProps) {
-  const finalScore = LINK_ANALYSIS_RESULT.score;
   const scoreMeta = getToneMeta(getScoreTone(finalScore));
 
   return (
@@ -29,7 +31,7 @@ export default function LinkResultSummarySection({
 
           <div className="rounded-2xl border border-border bg-base px-5 py-5">
             <div className="mb-2 text-sm font-semibold text-text">AI 요약</div>
-            <p className="text-sm leading-7 text-muted">{LINK_ANALYSIS_RESULT.summary}</p>
+            <p className="text-sm leading-7 text-muted">{summary}</p>
           </div>
         </div>
 
