@@ -1,18 +1,10 @@
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ANALYSIS_STEPS } from "../../data/data";
+import { isValidHttpUrl } from "../../share/utils/url";
 import FeedShortcutSection from "./sections/FeedShortcutSection";
 import MainHeroSection from "./sections/MainHeroSection";
 import UrlAnalysisSection from "./sections/UrlAnalysisSection";
-
-function isValidHttpUrl(value: string) {
-  try {
-    const parsed = new URL(value);
-    return parsed.protocol === "http:" || parsed.protocol === "https:";
-  } catch {
-    return false;
-  }
-}
 
 export default function MainPage() {
   const navigate = useNavigate();
