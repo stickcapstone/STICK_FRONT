@@ -35,48 +35,48 @@ export default function FeedGridSection({ items }: FeedGridSectionProps) {
   }
 
   return (
-    <div className="grid grid-cols-3 gap-4">
+    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
       {items.map((item, i) => {
         const rel = getReliability(item.score);
         return (
           <article
             key={i}
-            className="bg-[var(--surf)] rounded-[14px] overflow-hidden transition-all duration-200 hover:-translate-y-[3px] shadow-[0_8px_32px_rgba(140,155,185,0.28)]"
+            className="overflow-hidden rounded-[14px] bg-(--surf) shadow-[0_8px_32px_rgba(140,155,185,0.28)] transition-all duration-200 hover:-translate-y-0.75"
           >
-            <div className="flex items-center gap-[9px] px-3 py-2.5">
-              <div className="flex flex-col gap-px flex-1 min-w-0">
-                <span className="text-[13px] font-bold text-[var(--txt)] whitespace-nowrap overflow-hidden text-ellipsis">
+            <div className="flex items-center gap-2.5 px-3 py-2.5">
+              <div className="flex flex-1 min-w-0 flex-col gap-px">
+                <span className="overflow-hidden text-ellipsis whitespace-nowrap text-sm font-bold text-(--txt)">
                   {item.outlet}
                 </span>
-                <span className="[font-family:var(--fmono)] text-[10px] text-[var(--muted)] tracking-[1px]">
+                <span className="[font-family:var(--fmono)] text-[10px] tracking-[1px] text-(--muted)">
                   {item.cat}
                 </span>
               </div>
-              <span className={`[font-family:var(--fmono)] text-[10px] font-semibold px-2.5 py-[3px] rounded-full tracking-[1px] shrink-0 ${rel.pillClass}`}>
+              <span className={`shrink-0 rounded-full px-2.5 py-0.75 [font-family:var(--fmono)] text-[10px] font-semibold tracking-[1px] ${rel.pillClass}`}>
                 {rel.label}
               </span>
             </div>
 
             <div
-              className="w-full aspect-square relative flex items-center justify-center overflow-hidden"
+              className="relative flex w-full aspect-video items-center justify-center overflow-hidden sm:aspect-square"
               style={{ background: item.bg }}
             >
               <div className="absolute inset-0 bg-gradient-to-b from-transparent to-[rgba(8,12,20,0.88)]" />
-              <span className="text-[72px] relative z-[1] drop-shadow-[0_4px_20px_rgba(0,0,0,0.5)]">
+              <span className="relative z-1 text-5xl drop-shadow-[0_4px_20px_rgba(0,0,0,0.5)] sm:text-[72px]">
                 {item.icon}
               </span>
 
-              <div className="absolute bottom-[14px] left-[14px] right-[14px] z-[2]">
-                <div className="[font-family:var(--fmono)] text-[9px] tracking-[2px] text-white/55 uppercase mb-0.5">
+              <div className="absolute bottom-3 left-3 right-3 z-2 sm:bottom-3.5 sm:left-3.5 sm:right-3.5">
+                <div className="mb-0.5 [font-family:var(--fmono)] text-[9px] uppercase tracking-[2px] text-white/55">
                   신뢰도
                 </div>
                 <div
-                  className="[font-family:var(--fdisp)] text-[30px] font-black leading-none mb-[5px]"
+                  className="mb-1 [font-family:var(--fdisp)] text-2xl font-black leading-none sm:text-[30px]"
                   style={{ color: rel.color }}
                 >
                   {item.score}
                 </div>
-                <div className="h-[3px] bg-white/12 rounded-full overflow-hidden">
+                <div className="h-[3px] overflow-hidden rounded-full bg-white/12">
                   <div
                     className={`h-full rounded-full transition-all duration-500 ${rel.barClass}`}
                     style={{ width: `${item.score}%` }}
@@ -85,12 +85,12 @@ export default function FeedGridSection({ items }: FeedGridSectionProps) {
               </div>
             </div>
 
-            <div className="px-3 pt-2.5 pb-3.5">
-              <p className="text-[12px] leading-[1.65] text-[var(--txt)] mb-1.5 line-clamp-3">
+            <div className="px-3 pb-3.5 pt-2.5">
+              <p className="mb-1.5 text-[13px] leading-relaxed text-(--txt) line-clamp-3 sm:text-[12px]">
                 <span className="font-bold">{item.outlet}</span>{" "}
                 {item.title}
               </p>
-              <span className="[font-family:var(--fmono)] text-[9px] text-[var(--muted)] tracking-[1px] uppercase">
+              <span className="[font-family:var(--fmono)] text-[9px] uppercase tracking-[1px] text-(--muted)">
                 {item.time}
               </span>
             </div>

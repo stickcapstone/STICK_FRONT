@@ -5,7 +5,7 @@ export default function FeedShortcutSection() {
 
   return (
     <button
-      className="mt-12 inline-flex items-center gap-2 rounded-full border border-border bg-panel px-6 py-3 text-sm text-muted transition hover:-translate-y-0.5 hover:border-accent hover:text-text sm:absolute sm:bottom-9 sm:mt-0"
+      className="fixed bottom-5 left-1/2 z-40 -translate-x-1/2 inline-flex items-center gap-2 rounded-full border border-border bg-panel/95 px-6 py-3 text-sm text-muted shadow-lg backdrop-blur-md transition hover:-translate-y-0.5 hover:border-accent hover:text-text md:absolute md:bottom-9 md:translate-x-0 md:left-auto md:shadow-none md:backdrop-blur-none"
       onClick={() => navigate("/feed")}
       type="button"
     >

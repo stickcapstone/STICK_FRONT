@@ -9,16 +9,16 @@ interface FeedHeaderSectionProps {
 
 export default function FeedHeaderSection({ filter, onSelectFilter }: FeedHeaderSectionProps) {
   return (
-    <div className="flex items-center justify-between border-b border-[var(--brd)] pb-4">
-      <div className="[font-family:var(--fdisp)] text-[28px] tracking-[4px] text-[var(--txt)]">
+    <div className="flex flex-col gap-3 border-b border-[var(--brd)] pb-4">
+      <div className="[font-family:var(--fdisp)] text-[22px] tracking-[3px] text-[var(--txt)] sm:text-[28px] sm:tracking-[4px]">
         신뢰도 <span className="text-[var(--accent)]">피드</span>
       </div>
-      <div className="flex gap-1.5">
+      <div className="flex gap-1.5 overflow-x-auto pb-0.5 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
         {FILTERS.map((f) => (
           <button
             key={f}
             type="button"
-            className={`text-[12px] font-medium px-4 py-1.5 rounded-full cursor-pointer transition-all duration-[180ms] shadow-[0_4px_16px_rgba(140,155,185,0.28)] ${
+            className={`shrink-0 cursor-pointer rounded-full px-4 py-1.5 text-[12px] font-medium shadow-[0_4px_16px_rgba(140,155,185,0.28)] transition-all duration-[180ms] ${
               filter === f
                 ? "bg-[var(--aglow)] text-[var(--accent)]"
                 : "bg-transparent text-[var(--muted)] hover:text-[var(--txt)]"
