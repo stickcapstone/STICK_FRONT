@@ -1,21 +1,58 @@
 <!doctype html>
 <html lang="ko">
   <head>
-    <script>
-      (function () {
-        const saved = localStorage.getItem("theme");
-        const theme =
-          saved ??
-          (window.matchMedia("(prefers-color-scheme: dark)").matches
-            ? "dark"
-            : "light");
-        document.documentElement.setAttribute("data-theme", theme);
-      })();
-    </script>
+    <!-- 테마 초기화 (FOUC 방지) -->
+    <script src="/theme-init.js"></script>
+
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>veriweb</title>
+
+    <!-- ── SEO ── -->
+    <title>VERIWEB — AI 팩트체크 플랫폼</title>
+    <meta name="description" content="AI 기반 뉴스·이미지 진위 분석 플랫폼. URL과 이미지의 신뢰도를 검증하고 딥페이크·조작 여부를 탐지하세요." />
+    <meta name="keywords" content="팩트체크, AI 분석, 뉴스 신뢰도, 이미지 조작 탐지, 딥페이크, 허위정보" />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href="https://veriweb.com/" />
+
+    <!-- ── Open Graph (카카오·SNS 공유) ── -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="VERIWEB" />
+    <meta property="og:title" content="VERIWEB — AI 팩트체크 플랫폼" />
+    <meta property="og:description" content="AI 기반 뉴스·이미지 진위 분석 플랫폼. URL과 이미지의 신뢰도를 검증하세요." />
+    <meta property="og:image" content="https://veriweb.com/thumbnail-image-analysis.svg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:url" content="https://veriweb.com/" />
+    <meta property="og:locale" content="ko_KR" />
+
+    <!-- ── Twitter Card ── -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="VERIWEB — AI 팩트체크 플랫폼" />
+    <meta name="twitter:description" content="AI 기반 뉴스·이미지 진위 분석 플랫폼." />
+    <meta name="twitter:image" content="https://veriweb.com/thumbnail-image-analysis.svg" />
+
+    <!-- ── 보안 ── -->
+    <!-- MIME 스니핑 차단 -->
+    <meta http-equiv="X-Content-Type-Options" content="nosniff" />
+    <!-- 리퍼러 최소화 (외부 요청 시 origin만 전달) -->
+    <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin" />
+    <!-- 불필요한 브라우저 기능 비활성화 -->
+    <meta http-equiv="Permissions-Policy" content="camera=(), microphone=(), geolocation=(), payment=(), usb=(), bluetooth=()" />
+    <!-- CSP: 인라인 스크립트 차단, 외부 리소스 self 제한 -->
+    <meta http-equiv="Content-Security-Policy" content="
+      default-src 'self';
+      script-src 'self';
+      style-src 'self' 'unsafe-inline';
+      img-src 'self' data: blob:;
+      connect-src 'self';
+      font-src 'self';
+      object-src 'none';
+      base-uri 'self';
+      form-action 'self';
+    " />
+
+    <!-- ── Favicon ── -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   </head>
   <body>
     <div id="root"></div>

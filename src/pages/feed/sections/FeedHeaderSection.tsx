@@ -18,7 +18,7 @@ export default function FeedHeaderSection({ filter, onSelectFilter }: FeedHeader
           <button
             key={f}
             type="button"
-            className={`shrink-0 cursor-pointer rounded-full px-4 py-1.5 text-[12px] font-medium shadow-[0_4px_16px_rgba(140,155,185,0.28)] transition-all duration-[180ms] ${
+            className={`shrink-0 cursor-pointer rounded-full px-4 py-1.5 text-[12px] font-medium shadow-[0_1px_4px_rgba(140,155,185,0.06)] transition-all duration-180 ${
               filter === f
                 ? "bg-[var(--aglow)] text-[var(--accent)]"
                 : "bg-transparent text-[var(--muted)] hover:text-[var(--txt)]"
