@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+Allow: /feed
+Allow: /image
+Disallow: /result
+
+Sitemap: https://veriweb.com/sitemap.xml
