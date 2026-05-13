@@ -36,7 +36,7 @@ export default function FeedGridSection({ items }: FeedGridSectionProps) {
 
   return (
     <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-      {items.map((item) => {
+      {items.map((item, i) => {
         const rel = getReliability(item.score);
         return (
           <article
@@ -45,10 +45,10 @@ export default function FeedGridSection({ items }: FeedGridSectionProps) {
           >
             <div className="flex items-center gap-2.5 px-3 py-2.5">
               <div className="flex flex-1 min-w-0 flex-col gap-px">
-                <span className="overflow-hidden text-ellipsis whitespace-nowrap text-sm font-bold text-(--txt)">
+                <span className="overflow-hidden text-ellipsis whitespace-nowrap text-sm font-bold text-[var(--txt)]">
                   {item.outlet}
                 </span>
-                <span className="[font-family:var(--fmono)] text-[10px] tracking-[1px] text-(--muted)">
+                <span className="[font-family:var(--fmono)] text-[10px] tracking-[1px] text-[var(--muted)]">
                   {item.cat}
                 </span>
               </div>
@@ -59,20 +59,12 @@ export default function FeedGridSection({ items }: FeedGridSectionProps) {
 
             <div
               className="relative flex w-full aspect-video items-center justify-center overflow-hidden sm:aspect-square"
-              style={item.thumbnailUrl ? undefined : { background: item.bg }}
+              style={{ background: item.bg }}
             >
-              {item.thumbnailUrl ? (
-                <img
-                  src={item.thumbnailUrl}
-                  alt={item.title}
-                  className="absolute inset-0 h-full w-full object-cover"
-                />
-              ) : (
-                <span className="relative z-1 text-5xl drop-shadow-[0_4px_20px_rgba(0,0,0,0.5)] sm:text-[72px]">
-                  {item.icon}
-                </span>
-              )}
               <div className="absolute inset-0 bg-gradient-to-b from-transparent to-[rgba(8,12,20,0.88)]" />
+              <span className="relative z-1 text-5xl drop-shadow-[0_4px_20px_rgba(0,0,0,0.5)] sm:text-[72px]">
+                {item.icon}
+              </span>
 
               <div className="absolute bottom-3 left-3 right-3 z-2 sm:bottom-3.5 sm:left-3.5 sm:right-3.5">
                 <div className="mb-0.5 [font-family:var(--fmono)] text-[9px] uppercase tracking-[2px] text-white/55">
@@ -94,15 +86,15 @@ export default function FeedGridSection({ items }: FeedGridSectionProps) {
             </div>
 
             <div className="px-3 pb-3.5 pt-2.5">
-              <p className="mb-1.5 text-[13px] leading-relaxed text-(--txt) line-clamp-3 sm:text-[12px]">
+              <p className="mb-1.5 text-[13px] leading-relaxed text-[var(--txt)] line-clamp-3 sm:text-[12px]">
                 <span className="font-bold">{item.outlet}</span>{" "}
                 {item.title}
               </p>
-              <span className="[font-family:var(--fmono)] text-[9px] uppercase tracking-[1px] text-(--muted)">
+              <span className="[font-family:var(--fmono)] text-[9px] uppercase tracking-[1px] text-[var(--muted)]">
                 {item.time}
               </span>
             </div>
-          </a>
+          </article>
         );
       })}
     </div>
