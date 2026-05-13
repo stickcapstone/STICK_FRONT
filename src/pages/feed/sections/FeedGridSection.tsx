@@ -36,11 +36,14 @@ export default function FeedGridSection({ items }: FeedGridSectionProps) {
 
   return (
     <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-      {items.map((item, i) => {
+      {items.map((item) => {
         const rel = getReliability(item.score);
         return (
-          <article
-            key={i}
+          <a
+            key={item.id}
+            href={item.href}
+            target="_blank"
+            rel="noreferrer"
             className="overflow-hidden rounded-[14px] bg-(--surf) shadow-[0_8px_32px_rgba(140,155,185,0.28)] transition-all duration-200 hover:-translate-y-0.75"
           >
             <div className="flex items-center gap-2.5 px-3 py-2.5">
@@ -59,12 +62,20 @@ export default function FeedGridSection({ items }: FeedGridSectionProps) {
 
             <div
               className="relative flex w-full aspect-video items-center justify-center overflow-hidden sm:aspect-square"
-              style={{ background: item.bg }}
+              style={item.thumbnailUrl ? undefined : { background: item.bg }}
             >
+              {item.thumbnailUrl ? (
+                <img
+                  src={item.thumbnailUrl}
+                  alt={item.title}
+                  className="absolute inset-0 h-full w-full object-cover"
+                />
+              ) : (
+                <span className="relative z-1 text-5xl drop-shadow-[0_4px_20px_rgba(0,0,0,0.5)] sm:text-[72px]">
+                  {item.icon}
+                </span>
+              )}
               <div className="absolute inset-0 bg-gradient-to-b from-transparent to-[rgba(8,12,20,0.88)]" />
-              <span className="relative z-1 text-5xl drop-shadow-[0_4px_20px_rgba(0,0,0,0.5)] sm:text-[72px]">
-                {item.icon}
-              </span>
 
               <div className="absolute bottom-3 left-3 right-3 z-2 sm:bottom-3.5 sm:left-3.5 sm:right-3.5">
                 <div className="mb-0.5 [font-family:var(--fmono)] text-[9px] uppercase tracking-[2px] text-white/55">
@@ -94,7 +105,7 @@ export default function FeedGridSection({ items }: FeedGridSectionProps) {
                 {item.time}
               </span>
             </div>
-          </article>
+          </a>
         );
       })}
     </div>

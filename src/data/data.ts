@@ -26,13 +26,16 @@ export interface RecommendedArticle {
 }
 
 export interface FeedItem {
-  cat: string;
+  id: number;
+  title: string;
+  href: string;
   outlet: string;
+  cat: string;
   score: number;
+  thumbnailUrl: string | null;
+  time: string;
   bg: string;
   icon: string;
-  title: string;
-  time: string;
 }
 
 export const ANALYSIS_STEPS = [
