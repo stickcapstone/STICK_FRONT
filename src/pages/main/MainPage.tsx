@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ANALYSIS_STEPS } from "../../data/data";
+import { analyzeUrl } from "../../share/hooks/api";
 import { isValidHttpUrl } from "../../share/utils/url";
 import FeedShortcutSection from "./sections/FeedShortcutSection";
 import MainHeroSection from "./sections/MainHeroSection";
@@ -41,31 +42,38 @@ export default function MainPage() {
     validateUrl(nextUrl);
   }
 
-  function analyze() {
-    if (!validateUrl(url)) {
-      return;
-    }
+  async function analyze() {
+    if (!validateUrl(url)) return;
 
     setLoading(true);
-    let index = 0;
+    setError("");
 
+    let stepIndex = 0;
     const intervalId = window.setInterval(() => {
-      if (index >= ANALYSIS_STEPS.length) {
-        window.clearInterval(intervalId);
-        window.setTimeout(() => {
-          setLoading(false);
-          setPct(0);
-          setStatus("");
-          navigate(`/result?url=${encodeURIComponent(url.trim())}`);
-        }, 500);
-        return;
+      // 마지막 step 직전에서 멈추고 API 응답을 기다림
+      if (stepIndex < ANALYSIS_STEPS.length - 1) {
+        const [nextPct, nextStatus] = ANALYSIS_STEPS[stepIndex];
+        setPct(nextPct);
+        setStatus(nextStatus);
+        stepIndex++;
       }
+    }, 600);
 
-      const [nextPct, nextStatus] = ANALYSIS_STEPS[index];
-      setPct(nextPct);
-      setStatus(nextStatus);
-      index += 1;
-    }, 550);
+    try {
+      const res = await analyzeUrl(url.trim());
+      window.clearInterval(intervalId);
+      setPct(100);
+      setStatus("분석 완료!");
+      await new Promise((r) => window.setTimeout(r, 400));
+      setLoading(false);
+      navigate(`/result?id=${res.data.data.analysisId}`);
+    } catch {
+      window.clearInterval(intervalId);
+      setLoading(false);
+      setPct(0);
+      setStatus("");
+      setError("분석에 실패했습니다. 잠시 후 다시 시도해주세요.");
+    }
   }
 
   return (

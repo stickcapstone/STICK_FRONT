@@ -1,28 +1,81 @@
 import { useEffect, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
-import { isValidHttpUrl } from "../../../share/utils/url";
-import type { BreakdownItem, ExternalLinkItem, RecommendedArticle } from "../../../data/data";
+import type { AnalysisData } from "../../../share/hooks/api";
+import { getAnalysisById } from "../../../share/hooks/api";
+import type { BreakdownItem, RecommendedArticle } from "../../../data/data";
+import { getScoreTone } from "./sections/linkAnalysisUtils";
 import BreakdownSection from "./sections/BreakdownSection";
-import ExternalLinkGridSection from "./sections/ExternalLinkGridSection";
 import LinkResultSummarySection from "./sections/LinkResultSummarySection";
 import RecommendedArticlesSection from "./sections/RecommendedArticlesSection";
 import ResultGuideSection from "./sections/ResultGuideSection";
+import ReanalyzeButton from "./ReanalyzeButton";
+
+const CATEGORY_LABELS: Record<string, string> = {
+  DOMAIN: "도메인 신뢰도",
+  AUTHOR: "작성자/출처 명확성",
+  REFERENCE: "근거/인용 충실도",
+  CONSISTENCY: "정보 일관성",
+  MANIPULATION: "조작/품질 이상",
+  ACADEMIC: "학술 저널 인용",
+  GOV: "정부/공공기관 인용",
+};
+
+function mapBreakdown(items: AnalysisData["breakdown"]): BreakdownItem[] {
+  return items.map((item) => ({
+    id: item.category,
+    label: CATEGORY_LABELS[item.category] ?? item.category,
+    score: item.score,
+    tone: getScoreTone(item.score),
+    summary: item.reason,
+    details: [item.reason],
+  }));
+}
+
+function mapArticles(items: AnalysisData["recommendedArticles"]): RecommendedArticle[] {
+  return items.map((a, i) => ({
+    id: String(i),
+    outlet: a.source,
+    title: a.title,
+    summary: a.publishedAt
+      ? new Date(a.publishedAt).toLocaleDateString("ko-KR")
+      : "",
+    href: a.url,
+  }));
+}
 
 export default function LinkAnalysisPage() {
   const [searchParams] = useSearchParams();
-  const analyzedUrl = searchParams.get("url") ?? "";
+  const rawId = searchParams.get("id");
+  const analysisId = rawId ? Number(rawId) : null;
 
-  const finalScore = 0;
-  const summary = "";
-  const breakdown: BreakdownItem[] = [];
-  const evidenceLinks: ExternalLinkItem[] = [];
-  const similarLinks: ExternalLinkItem[] = [];
-  const recArticles: RecommendedArticle[] = [];
-
+  const [data, setData] = useState<AnalysisData | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [fetchError, setFetchError] = useState(false);
   const [displayedScore, setDisplayedScore] = useState(0);
   const [openItemId, setOpenItemId] = useState("");
 
   useEffect(() => {
+    if (!analysisId || isNaN(analysisId)) {
+      setLoading(false);
+      return;
+    }
+
+    getAnalysisById(analysisId)
+      .then((res) => {
+        if (res.data.success) {
+          setData(res.data.data);
+        } else {
+          setFetchError(true);
+        }
+      })
+      .catch(() => setFetchError(true))
+      .finally(() => setLoading(false));
+  }, [analysisId]);
+
+  const finalScore = data?.totalScore ?? 0;
+
+  useEffect(() => {
+    if (!data) return;
     let frameId = 0;
     const duration = 1100;
     const startedAt = performance.now();
@@ -32,18 +85,23 @@ export default function LinkAnalysisPage() {
       const progress = Math.min(elapsed / duration, 1);
       const eased = 1 - (1 - progress) * (1 - progress);
       setDisplayedScore(Math.round(finalScore * eased));
-
-      if (progress < 1) {
-        frameId = window.requestAnimationFrame(animate);
-      }
+      if (progress < 1) frameId = window.requestAnimationFrame(animate);
     };
 
     frameId = window.requestAnimationFrame(animate);
-
     return () => window.cancelAnimationFrame(frameId);
-  }, [finalScore]);
+  }, [finalScore, data]);
 
-  if (!isValidHttpUrl(analyzedUrl)) {
+  if (loading) {
+    return (
+      <div className="flex min-h-screen flex-col items-center justify-center gap-4 px-6">
+        <div className="h-8 w-8 animate-spin rounded-full border-2 border-accent border-t-transparent" />
+        <p className="font-mono text-sm text-muted">분석 결과를 불러오는 중...</p>
+      </div>
+    );
+  }
+
+  if (!analysisId || isNaN(analysisId) || fetchError) {
     return (
       <div className="flex min-h-screen flex-col items-center justify-center gap-5 px-6 animate-[fade-up_.28s_ease]">
         <div className="font-mono text-[10px] uppercase tracking-[0.22em] text-muted">No Result</div>
@@ -59,14 +117,17 @@ export default function LinkAnalysisPage() {
     );
   }
 
+  const breakdown = mapBreakdown(data!.breakdown);
+  const recArticles = mapArticles(data!.recommendedArticles);
+
   return (
     <div className="min-h-screen px-6 pb-16 pt-20 animate-[fade-up_.28s_ease] lg:px-12">
       <div className="mx-auto flex max-w-7xl flex-col gap-5">
         <LinkResultSummarySection
-          analyzedUrl={analyzedUrl}
+          analyzedUrl={data!.url}
           displayedScore={displayedScore}
           finalScore={finalScore}
-          summary={summary}
+          summary={data!.summary}
         />
 
         <div className="grid gap-5 xl:grid-cols-[minmax(0,1fr)_320px]">
@@ -76,12 +137,13 @@ export default function LinkAnalysisPage() {
               onToggle={(id) => setOpenItemId((current) => (current === id ? "" : id))}
               openItemId={openItemId}
             />
-            <ExternalLinkGridSection items={evidenceLinks} title="근거 링크" />
-            <ExternalLinkGridSection items={similarLinks} title="유사 정보 링크" />
             <RecommendedArticlesSection articles={recArticles} />
           </div>
 
-          <ResultGuideSection />
+          <div className="flex flex-col gap-5">
+            <ResultGuideSection />
+            <ReanalyzeButton />
+          </div>
         </div>
       </div>
     </div>
