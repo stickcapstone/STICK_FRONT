@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { ANALYSIS_STEPS } from "../../data/data";
 import { analyzeUrl } from "../../share/hooks/api";
 import { isValidHttpUrl } from "../../share/utils/url";
 import FeedShortcutSection from "./sections/FeedShortcutSection";
@@ -12,8 +11,6 @@ export default function MainPage() {
   const [url, setUrl] = useState("");
   const [focused, setFocused] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [pct, setPct] = useState(0);
-  const [status, setStatus] = useState("");
   const [error, setError] = useState("");
 
   const inputRef = useRef<HTMLInputElement>(null);
@@ -48,31 +45,13 @@ export default function MainPage() {
     setLoading(true);
     setError("");
 
-    let stepIndex = 0;
-    const intervalId = window.setInterval(() => {
-      // 마지막 step 직전에서 멈추고 API 응답을 기다림
-      if (stepIndex < ANALYSIS_STEPS.length - 1) {
-        const [nextPct, nextStatus] = ANALYSIS_STEPS[stepIndex];
-        setPct(nextPct);
-        setStatus(nextStatus);
-        stepIndex++;
-      }
-    }, 600);
-
     try {
       const res = await analyzeUrl(url.trim());
-      window.clearInterval(intervalId);
-      setPct(100);
-      setStatus("분석 완료!");
-      await new Promise((r) => window.setTimeout(r, 400));
-      setLoading(false);
       navigate(`/result?id=${res.data.data.analysisId}`);
     } catch {
-      window.clearInterval(intervalId);
-      setLoading(false);
-      setPct(0);
-      setStatus("");
       setError("분석에 실패했습니다. 잠시 후 다시 시도해주세요.");
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -97,8 +76,6 @@ export default function MainPage() {
           onBlur={() => setFocused(false)}
           onChangeURL={onChangeURL}
           onFocus={() => setFocused(true)}
-          pct={pct}
-          status={status}
           url={url}
         />
       </div>
