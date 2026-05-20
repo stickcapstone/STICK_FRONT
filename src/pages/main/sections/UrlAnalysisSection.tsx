@@ -3,11 +3,9 @@ import type { RefObject } from "react";
 interface UrlAnalysisSectionProps {
   focused: boolean;
   loading: boolean;
-  pct: number;
-  status: string;
   url: string;
   inputRef: RefObject<HTMLInputElement | null>;
-  error:string
+  error: string;
   onAnalyze: () => void;
   onBlur: () => void;
   onChangeURL: (nextUrl: string) => void;
@@ -17,8 +15,6 @@ interface UrlAnalysisSectionProps {
 export default function UrlAnalysisSection({
   focused,
   loading,
-  pct,
-  status,
   url,
   inputRef,
   error,
@@ -50,6 +46,7 @@ export default function UrlAnalysisSection({
           </div>
           <input
             className="h-14 w-full bg-transparent font-mono text-xs text-text outline-none placeholder:text-muted"
+            disabled={loading}
             onBlur={onBlur}
             onChange={(event) => onChangeURL(event.target.value)}
             onFocus={onFocus}
@@ -61,11 +58,12 @@ export default function UrlAnalysisSection({
         </div>
 
         <button
-          className="h-14 shrink-0 bg-accent px-6 text-sm font-bold text-white transition hover:bg-blue-600 sm:px-8"
+          className="h-14 shrink-0 bg-accent px-6 text-sm font-bold text-white transition hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed sm:px-8"
+          disabled={loading}
           onClick={onAnalyze}
           type="button"
         >
-          분석 시작
+          {loading ? "분석 중..." : "분석 시작"}
         </button>
       </div>
 
@@ -75,17 +73,13 @@ export default function UrlAnalysisSection({
       <p className="mt-2 min-h-6 font-mono text-sm text-danger">{error}</p>
 
       {loading && (
-        <div className="mx-auto mb-1 w-full max-w-[540px]">
-          <div className="mb-2 flex items-center justify-between font-mono text-[10px] text-muted">
-            <span>{status}</span>
-            <span>{pct}%</span>
-          </div>
+        <div className="mx-auto w-full max-w-[540px]">
           <div className="h-1 overflow-hidden rounded-full bg-panel-2">
-            <div
-              className="h-full rounded-full bg-accent transition-[width] duration-300 ease-out"
-              style={{ width: `${pct}%` }}
-            />
+            <div className="h-full w-1/3 rounded-full bg-accent animate-[indeterminate_1.4s_ease-in-out_infinite]" />
           </div>
+          <p className="mt-2 font-mono text-[10px] text-muted animate-pulse">
+            분석 중입니다. 최대 1분 정도 소요될 수 있습니다.
+          </p>
         </div>
       )}
     </>
