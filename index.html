@@ -30,28 +30,12 @@
     <meta name="twitter:title" content="VERIWEB — AI 팩트체크 플랫폼" />
     <meta name="twitter:description" content="AI 기반 뉴스·이미지 진위 분석 플랫폼." />
     <meta name="twitter:image" content="https://veriweb.vercel.app/thumbnail-image-analysis.svg" />
-    <meta http-equiv="Content-Security-Policy" 
-        content="default-src 'self'; connect-src 'self' http://43.203.78.189:8081; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline';">
 
     <!-- ── 보안 ── -->
-    <!-- MIME 스니핑 차단 -->
     <meta http-equiv="X-Content-Type-Options" content="nosniff" />
-    <!-- 리퍼러 최소화 (외부 요청 시 origin만 전달) -->
     <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin" />
-    <!-- 불필요한 브라우저 기능 비활성화 -->
     <meta http-equiv="Permissions-Policy" content="camera=(), microphone=(), geolocation=(), payment=(), usb=(), bluetooth=()" />
-    <!-- CSP: 인라인 스크립트 차단, 외부 리소스 self 제한 -->
-    <meta http-equiv="Content-Security-Policy" content="
-      default-src 'self';
-      script-src 'self';
-      style-src 'self' 'unsafe-inline';
-      img-src 'self' data: blob:;
-      connect-src 'self';
-      font-src 'self';
-      object-src 'none';
-      base-uri 'self';
-      form-action 'self';
-    " />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob: https:; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self';" />
 
     <!-- ── Favicon ── -->
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
