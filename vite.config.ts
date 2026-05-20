@@ -5,8 +5,11 @@ import tailwindcss from "@tailwindcss/vite";
 export default defineConfig({
   plugins: [react(), tailwindcss()],
   server: {
-    headers: {
-      "Content-Security-Policy": "connect-src 'self' http://43.203.78.189:8081"
-    }
-  }
+    proxy: {
+      "/api/v1": {
+        target: "http://43.203.78.189:8081",
+        changeOrigin: true,
+      },
+    },
+  },
 });
