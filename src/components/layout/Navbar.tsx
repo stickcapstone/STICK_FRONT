@@ -3,7 +3,6 @@ import { NavLink, useNavigate } from "react-router-dom";
 
 const tabs = [
   { label: "분석", path: "/" },
-  { label: "결과", path: "/result" },
   { label: "피드", path: "/feed" },
   { label: "이미지 분석", path: "/image" },
 ] as const;

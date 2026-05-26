@@ -2,7 +2,7 @@ import { useEffect, useRef, useState, type ChangeEvent, type DragEvent } from "r
 import { useNavigate } from "react-router-dom";
 import { analyzeImage, analyzeVideo } from "../../../share/hooks/api";
 import type { ImageAnalysisData, VideoAnalysisData } from "../../../share/hooks/api";
-import { ServerError } from "../../../share/utils/errors";
+import { getErrorMessage } from "../../../share/utils/errors";
 
 type Mode = "image" | "video";
 
@@ -14,6 +14,7 @@ export function useImageAnalysis() {
   const [dragging, setDragging] = useState(false);
   const [loading, setLoading] = useState(false);
   const [serverError, setServerError] = useState<string | null>(null);
+  const [fileError, setFileError] = useState<string | null>(null);
   const [result, setResult] = useState<ImageAnalysisData | null>(null);
   const [videoResult, setVideoResult] = useState<VideoAnalysisData | null>(null);
   const [videoError, setVideoError] = useState<string | null>(null);
@@ -36,11 +37,25 @@ export function useImageAnalysis() {
     setMode(nextMode);
   }
 
+  const SIZE_LIMIT = mode === "image" ? 20 * 1024 * 1024 : 200 * 1024 * 1024; // 이미지 20MB, 영상 200MB
+  const SIZE_LABEL = mode === "image" ? "20MB" : "200MB";
+
   function handleFile(nextFile: File) {
-    const valid = mode === "image"
+    const validType = mode === "image"
       ? nextFile.type.startsWith("image/")
       : nextFile.type.startsWith("video/");
-    if (!valid) return;
+
+    if (!validType) {
+      setFileError(mode === "image" ? "이미지 파일만 업로드할 수 있습니다." : "영상 파일만 업로드할 수 있습니다.");
+      return;
+    }
+
+    if (nextFile.size > SIZE_LIMIT) {
+      setFileError(`파일 크기가 너무 큽니다. ${SIZE_LABEL} 이하의 파일을 사용해주세요. (현재: ${(nextFile.size / 1024 / 1024).toFixed(1)}MB)`);
+      return;
+    }
+
+    setFileError(null);
     setResult(null);
     setVideoResult(null);
     setVideoError(null);
@@ -65,6 +80,7 @@ export function useImageAnalysis() {
     setResult(null);
     setVideoResult(null);
     setVideoError(null);
+    setFileError(null);
     setPreview((cur) => { if (cur) URL.revokeObjectURL(cur); return null; });
     if (inputRef.current) inputRef.current.value = "";
   }
@@ -84,11 +100,7 @@ export function useImageAnalysis() {
           setVideoError(res.data.message ?? "분석에 실패했습니다.");
         }
       } catch (err) {
-        if (err instanceof ServerError) {
-          setVideoError(err.message);
-        } else {
-          setVideoError("서버 연결에 실패했습니다. 다시 시도해주세요.");
-        }
+        setVideoError(getErrorMessage(err));
       } finally {
         setLoading(false);
       }
@@ -99,12 +111,9 @@ export function useImageAnalysis() {
     setLoading(true);
     try {
       const res = await analyzeImage(file);
-      console.log(res.data);
       setResult(res.data.data);
     } catch (err) {
-      if (err instanceof ServerError) {
-        setServerError(err.message);
-      }
+      setServerError(getErrorMessage(err));
     } finally {
       setLoading(false);
     }
@@ -122,6 +131,7 @@ export function useImageAnalysis() {
     dragging,
     loading,
     serverError,
+    fileError,
     result,
     videoResult,
     videoError,

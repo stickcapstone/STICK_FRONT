@@ -12,7 +12,7 @@ import VideoAnalysisResultSection from "../video/sections/VideoAnalysisResultSec
 export default function ImageAnalysisPage() {
   const {
     mode, file, preview, dragging, loading,
-    serverError, result, videoResult, videoError, inputRef,
+    serverError, fileError, result, videoResult, videoError, inputRef,
     switchMode, onDrop, onChange, removeFile, analyze,
     retryAfterError, navigateHome,
   } = useImageAnalysis();
@@ -55,8 +55,14 @@ export default function ImageAnalysisPage() {
           : <VideoUploadSection {...uploadProps} />
         }
 
+        {fileError && (
+          <div className="w-full rounded-2xl border border-danger/30 bg-danger/5 px-4 py-3 text-sm text-danger">
+            {fileError}
+          </div>
+        )}
+
         {videoError && (
-          <div className="w-full rounded-2xl border border-red-500/30 bg-red-500/5 px-4 py-3 text-sm text-red-400">
+          <div className="w-full rounded-2xl border border-danger/30 bg-danger/5 px-4 py-3 text-sm text-danger">
             {videoError}
           </div>
         )}

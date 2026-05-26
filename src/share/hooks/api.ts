@@ -10,7 +10,8 @@ api.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response?.status >= 500) {
-      throw new ServerError(error.response?.data?.message ?? "서버 오류가 발생했습니다.");
+      // 백엔드 내부 메시지는 노출하지 않음 (스택 트레이스·내부 경로 유출 방지)
+      throw new ServerError("서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요.");
     }
     return Promise.reject(error);
   }
