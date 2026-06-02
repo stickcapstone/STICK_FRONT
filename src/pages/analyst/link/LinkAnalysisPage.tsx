@@ -4,11 +4,12 @@ import type { AnalysisData } from "../../../share/hooks/api";
 import { getAnalysisById } from "../../../share/hooks/api";
 import type { BreakdownItem, RecommendedArticle } from "../../../data/data";
 import { getScoreTone } from "./sections/linkAnalysisUtils";
+import { useAnalysisHistory } from "../../../share/hooks/useAnalysisHistory";
 import BreakdownSection from "./sections/BreakdownSection";
 import LinkResultSummarySection from "./sections/LinkResultSummarySection";
 import RecommendedArticlesSection from "./sections/RecommendedArticlesSection";
 import ResultGuideSection from "./sections/ResultGuideSection";
-import ReanalyzeButton from "./ReanalyzeButton";
+import LinkResultSkeleton from "./sections/LinkResultSkeleton";
 
 const CATEGORY_LABELS: Record<string, string> = {
   DOMAIN: "도메인 신뢰도",
@@ -53,6 +54,7 @@ export default function LinkAnalysisPage() {
   const [fetchError, setFetchError] = useState(false);
   const [displayedScore, setDisplayedScore] = useState(0);
   const [openItemId, setOpenItemId] = useState("");
+  const { addHistory } = useAnalysisHistory();
 
   useEffect(() => {
     if (!analysisId || isNaN(analysisId)) {
@@ -63,7 +65,9 @@ export default function LinkAnalysisPage() {
     getAnalysisById(analysisId)
       .then((res) => {
         if (res.data.success) {
-          setData(res.data.data);
+          const d = res.data.data;
+          setData(d);
+          addHistory({ id: d.analysisId, url: d.url, score: d.totalScore, grade: d.grade });
         } else {
           setFetchError(true);
         }
@@ -92,14 +96,7 @@ export default function LinkAnalysisPage() {
     return () => window.cancelAnimationFrame(frameId);
   }, [finalScore, data]);
 
-  if (loading) {
-    return (
-      <div className="flex min-h-screen flex-col items-center justify-center gap-4 px-6">
-        <div className="h-8 w-8 animate-spin rounded-full border-2 border-accent border-t-transparent" />
-        <p className="font-mono text-sm text-muted">분석 결과를 불러오는 중...</p>
-      </div>
-    );
-  }
+  if (loading) return <LinkResultSkeleton />;
 
   if (!analysisId || isNaN(analysisId) || fetchError) {
     return (
@@ -142,7 +139,6 @@ export default function LinkAnalysisPage() {
 
           <div className="flex flex-col gap-5">
             <ResultGuideSection />
-            <ReanalyzeButton />
           </div>
         </div>
       </div>

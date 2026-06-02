@@ -5,6 +5,7 @@ import type { FeedArticleData } from "../../share/hooks/api";
 import { getFeed } from "../../share/hooks/api";
 import FeedHeaderSection from "./sections/FeedHeaderSection";
 import FeedGridSection from "./sections/FeedGridSection";
+import FeedCardSkeleton from "./sections/FeedCardSkeleton";
 
 type Filter = (typeof FILTERS)[number];
 
@@ -86,8 +87,10 @@ export default function FeedPage() {
         <FeedHeaderSection filter={filter} onSelectFilter={handleFilter} />
 
         {feedLoading ? (
-          <div className="flex justify-center py-16">
-            <div className="h-8 w-8 animate-spin rounded-full border-2 border-accent border-t-transparent" />
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {Array.from({ length: 6 }).map((_, i) => (
+              <FeedCardSkeleton key={i} />
+            ))}
           </div>
         ) : (
           <FeedGridSection items={visible} />

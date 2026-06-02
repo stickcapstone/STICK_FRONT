@@ -5,6 +5,7 @@ import ImageAnalysisPage from "./pages/analyst/image/ImageAnalysisPage";
 import FeedPage from "./pages/feed/FeedPage";
 import ThemeToggleButton from "./pages/main/ThemeToggleButton";
 import MainPage from "./pages/main/MainPage";
+import Page404 from "./share/errorPage/Page404";
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
         <Route path="/result" element={<LinkAnalysisPage />} />
         <Route path="/feed" element={<FeedPage />} />
         <Route path="/image" element={<ImageAnalysisPage />} />
+        <Route path="*" element={<Page404 />} />
       </Routes>
       <ThemeToggleButton />
     </div>
