@@ -1,4 +1,5 @@
 import { getScoreLabel, getScoreTone, getToneMeta } from "./linkAnalysisUtils";
+import ShareSection from "./ShareSection";
 
 interface LinkResultSummarySectionProps {
   analyzedUrl: string;
@@ -17,8 +18,11 @@ export default function LinkResultSummarySection({
 
   return (
     <section className="rounded-[28px] border border-border bg-panel p-6 lg:p-7">
-      <div className="mb-3 font-mono text-[10px] uppercase tracking-[0.22em] text-accent">
-        Link Analysis Result
+      <div className="mb-3 flex items-center justify-between gap-4 flex-wrap">
+        <span className="font-mono text-[10px] uppercase tracking-[0.22em] text-accent">
+          Link Analysis Result
+        </span>
+        <ShareSection score={finalScore} analyzedUrl={analyzedUrl} />
       </div>
       <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_280px]">
         <div className="space-y-4">

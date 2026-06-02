@@ -6,6 +6,7 @@ import { getUrlValidationError } from "../../share/utils/url";
 import FeedShortcutSection from "./sections/FeedShortcutSection";
 import MainHeroSection from "./sections/MainHeroSection";
 import UrlAnalysisSection from "./sections/UrlAnalysisSection";
+import AnalysisHistorySection from "./sections/AnalysisHistorySection";
 
 export default function MainPage() {
   const navigate = useNavigate();
@@ -70,6 +71,7 @@ export default function MainPage() {
           onFocus={() => setFocused(true)}
           url={url}
         />
+        <AnalysisHistorySection />
       </div>
 
       <FeedShortcutSection />
