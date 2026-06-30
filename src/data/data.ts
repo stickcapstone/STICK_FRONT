@@ -38,4 +38,4 @@ export interface FeedItem {
   icon: string;
 }
 
-export const FILTERS = ["전체", "정치", "경제", "IT", "건강", "국제"] as const;
+export const FILTERS = ["전체", "정치", "경제", "IT", "건강"] as const;
