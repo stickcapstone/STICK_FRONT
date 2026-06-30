@@ -77,7 +77,7 @@ export default function ImageAnalysisPage() {
         {videoResult && <VideoAnalysisResultSection result={videoResult} />}
         {result && <ImageResultSection result={result} />}
 
-        <ImageAnalyzeActionSection disabled={!file || loading} loading={loading} onAnalyze={analyze} />
+        <ImageAnalyzeActionSection disabled={!file || loading} loading={loading} onAnalyze={analyze} hasResult={!!(result || videoResult)} />
       </div>
     </div>
   );

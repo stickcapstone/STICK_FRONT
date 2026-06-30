@@ -2,12 +2,14 @@ interface ImageAnalyzeActionSectionProps {
   disabled: boolean;
   loading: boolean;
   onAnalyze: () => void;
+  hasResult: boolean;
 }
 
 export default function ImageAnalyzeActionSection({
   disabled,
   loading,
   onAnalyze,
+  hasResult,
 }: ImageAnalyzeActionSectionProps) {
   return (
     <button
@@ -16,7 +18,7 @@ export default function ImageAnalyzeActionSection({
       onClick={onAnalyze}
       type="button"
     >
-      {loading ? "분석 중.." : "분석 시작"}
+      {loading ? "분석 중.." : hasResult ? "재분석" : "분석 시작"}
     </button>
   );
 }

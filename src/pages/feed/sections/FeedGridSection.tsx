@@ -1,4 +1,6 @@
-import { memo } from "react";
+import { memo, useState, useCallback } from "react";
+import { useNavigate } from "react-router-dom";
+import { analyzeUrl } from "../../../share/hooks/api";
 import type { FeedItem } from "../../../data/data";
 
 interface FeedGridSectionProps {
@@ -27,6 +29,26 @@ function getReliability(score: number) {
 }
 
 function FeedGridSection({ items }: FeedGridSectionProps) {
+  const navigate = useNavigate();
+  const [loadingId, setLoadingId] = useState<number | null>(null);
+
+  const handleCardClick = useCallback(async (item: FeedItem) => {
+    if (loadingId !== null) return;
+    setLoadingId(item.id);
+    try {
+      const res = await analyzeUrl(item.href);
+      if (res.data.success) {
+        navigate(`/result?id=${res.data.data.analysisId}`);
+      } else {
+        window.open(item.href, "_blank", "noreferrer");
+      }
+    } catch {
+      window.open(item.href, "_blank", "noreferrer");
+    } finally {
+      setLoadingId(null);
+    }
+  }, [loadingId, navigate]);
+
   if (items.length === 0) {
     return (
       <div className="px-5 py-8 text-center text-[15px] text-(--muted) border border-dashed border-(--brd) rounded-xl bg-[rgba(15,20,28,0.35)]">
@@ -40,12 +62,10 @@ function FeedGridSection({ items }: FeedGridSectionProps) {
       {items.map((item) => {
         const rel = getReliability(item.score);
         return (
-          <a
+          <div
             key={item.id}
-            href={item.href}
-            target="_blank"
-            rel="noreferrer"
-            className="block overflow-hidden rounded-[14px] bg-(--surf) shadow-[0_4px_16px_rgba(140,155,185,0.10)] transition-all duration-200 hover:-translate-y-0.75 cursor-pointer"
+            onClick={() => handleCardClick(item)}
+            className={`block overflow-hidden rounded-[14px] bg-(--surf) shadow-[0_4px_16px_rgba(140,155,185,0.10)] transition-all duration-200 hover:-translate-y-0.75 cursor-pointer ${loadingId === item.id ? "opacity-60 pointer-events-none" : ""}`}
           >
             <div className="flex items-center gap-2.5 px-3 py-2.5">
               <div className="flex flex-1 min-w-0 flex-col gap-px">
@@ -111,7 +131,7 @@ function FeedGridSection({ items }: FeedGridSectionProps) {
                 {item.time}
               </span>
             </div>
-          </a>
+          </div>
         );
       })}
     </div>
