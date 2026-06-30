@@ -4,4 +4,4 @@ Allow: /feed
 Allow: /image
 Disallow: /result
 
-Sitemap: https://veriweb.com/sitemap.xml
+Sitemap: https://stick-front.vercel.app/sitemap.xml

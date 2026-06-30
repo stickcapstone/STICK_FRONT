@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import { FILTERS } from "../../data/data";
 import type { FeedItem } from "../../data/data";
 import type { FeedArticleData } from "../../share/hooks/api";
@@ -10,6 +10,7 @@ import FeedCardSkeleton from "./sections/FeedCardSkeleton";
 type Filter = (typeof FILTERS)[number];
 
 const PAGE_SIZE = 6;
+const SKELETON_ITEMS = Array.from({ length: PAGE_SIZE });
 
 const CATEGORY_META: Record<string, { label: string; bg: string; icon: string }> = {
   POLITICS: { label: "정치", bg: "linear-gradient(135deg,#1e293b,#334155)", icon: "🏛️" },
@@ -43,27 +44,39 @@ export default function FeedPage() {
   const [cursor, setCursor] = useState(PAGE_SIZE);
   const [items, setItems] = useState<FeedItem[]>([]);
   const [feedLoading, setFeedLoading] = useState(true);
+  const [feedError, setFeedError] = useState(false);
   const sentinelRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    getFeed(undefined, 0, 100)
+  const fetchFeed = useCallback(() => {
+    setFeedLoading(true);
+    setFeedError(false);
+    getFeed()
       .then((res) => {
         if (res.data.success) {
           setItems(res.data.data.articles.map(mapToFeedItem));
+        } else {
+          setFeedError(true);
         }
       })
-      .catch(() => {})
+      .catch(() => setFeedError(true))
       .finally(() => setFeedLoading(false));
   }, []);
 
-  const all = filter === "전체" ? items : items.filter((f) => f.cat === filter);
-  const visible = all.slice(0, cursor);
+  useEffect(() => {
+    fetchFeed();
+  }, [fetchFeed]);
+
+  const all = useMemo(
+    () => (filter === "전체" ? items : items.filter((f) => f.cat === filter)),
+    [filter, items],
+  );
+  const visible = useMemo(() => all.slice(0, cursor), [all, cursor]);
   const hasMore = cursor < all.length;
 
-  const handleFilter = (f: Filter) => {
+  const handleFilter = useCallback((f: Filter) => {
     setFilter(f);
     setCursor(PAGE_SIZE);
-  };
+  }, []);
 
   const loadMore = useCallback(() => {
     if (hasMore) setCursor((c) => c + PAGE_SIZE);
@@ -88,9 +101,20 @@ export default function FeedPage() {
 
         {feedLoading ? (
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {Array.from({ length: 6 }).map((_, i) => (
+            {SKELETON_ITEMS.map((_, i) => (
               <FeedCardSkeleton key={i} />
             ))}
+          </div>
+        ) : feedError ? (
+          <div className="flex flex-col items-center gap-4 rounded-2xl border border-dashed border-danger/30 bg-danger/5 py-16 text-center">
+            <p className="text-sm text-muted">피드를 불러오지 못했습니다.</p>
+            <button
+              type="button"
+              onClick={fetchFeed}
+              className="rounded-2xl bg-accent px-5 py-2.5 text-sm font-bold text-white transition hover:bg-blue-600"
+            >
+              다시 시도
+            </button>
           </div>
         ) : (
           <FeedGridSection items={visible} />

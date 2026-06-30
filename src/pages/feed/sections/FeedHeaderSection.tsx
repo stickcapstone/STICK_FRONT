@@ -1,3 +1,4 @@
+import { memo } from "react";
 import { FILTERS } from "../../../data/data";
 
 type Filter = (typeof FILTERS)[number];
@@ -7,7 +8,7 @@ interface FeedHeaderSectionProps {
   onSelectFilter: (filter: Filter) => void;
 }
 
-export default function FeedHeaderSection({ filter, onSelectFilter }: FeedHeaderSectionProps) {
+function FeedHeaderSection({ filter, onSelectFilter }: FeedHeaderSectionProps) {
   return (
     <div className="flex flex-col gap-3 border-b border-[var(--brd)] pb-4">
       <div className="[font-family:var(--fdisp)] text-[22px] tracking-[3px] text-[var(--txt)] sm:text-[28px] sm:tracking-[4px]">
@@ -32,3 +33,5 @@ export default function FeedHeaderSection({ filter, onSelectFilter }: FeedHeader
     </div>
   );
 }
+
+export default memo(FeedHeaderSection);

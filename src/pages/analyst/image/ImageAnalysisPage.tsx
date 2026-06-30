@@ -14,7 +14,7 @@ export default function ImageAnalysisPage() {
     mode, file, preview, dragging, loading,
     serverError, fileError, result, videoResult, videoError, inputRef,
     switchMode, onDrop, onChange, removeFile, analyze,
-    retryAfterError, navigateHome,
+    retryAfterError, retryVideo, navigateHome,
   } = useImageAnalysis();
 
   if (serverError !== null) {
@@ -62,8 +62,15 @@ export default function ImageAnalysisPage() {
         )}
 
         {videoError && (
-          <div className="w-full rounded-2xl border border-danger/30 bg-danger/5 px-4 py-3 text-sm text-danger">
-            {videoError}
+          <div className="w-full rounded-2xl border border-danger/30 bg-danger/5 px-4 py-3">
+            <p className="mb-2 text-sm text-danger">{videoError}</p>
+            <button
+              type="button"
+              onClick={retryVideo}
+              className="rounded-xl bg-danger/10 px-3 py-1.5 text-xs font-semibold text-danger transition hover:bg-danger/20"
+            >
+              다시 시도
+            </button>
           </div>
         )}
 
