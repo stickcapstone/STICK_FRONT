@@ -94,6 +94,7 @@ export interface AnalysisData {
   url: string;
   totalScore: number;
   grade: string;
+  contentCategory?: string;
   summary: string;
   breakdown: AnalysisBreakdownItem[];
   recommendedArticles: AnalysisArticleItem[];
