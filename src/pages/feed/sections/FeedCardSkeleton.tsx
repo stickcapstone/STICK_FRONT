@@ -1,4 +1,6 @@
-export default function FeedCardSkeleton() {
+import { memo } from "react";
+
+function FeedCardSkeleton() {
   return (
     <div className="overflow-hidden rounded-[14px] bg-(--surf) shadow-[0_4px_16px_rgba(140,155,185,0.10)]">
       <div className="flex items-center gap-2.5 px-3 py-2.5">
@@ -20,3 +22,5 @@ export default function FeedCardSkeleton() {
     </div>
   );
 }
+
+export default memo(FeedCardSkeleton);

@@ -141,7 +141,7 @@ export interface FeedApiResponse {
   message: string;
 }
 
-export function getFeed(category?: string, page = 0, size = 100) {
+export function getFeed(category?: string, page = 0, size = 30) {
   return api.get<FeedApiResponse>("feed", {
     params: { ...(category ? { category } : {}), page, size },
   });

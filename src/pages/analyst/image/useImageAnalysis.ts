@@ -31,8 +31,11 @@ export function useImageAnalysis() {
     setPreview((cur) => { if (cur) URL.revokeObjectURL(cur); return null; });
     setFile(null);
     setDragging(false);
+    setResult(null);
     setVideoResult(null);
+    setServerError(null);
     setVideoError(null);
+    setFileError(null);
     if (inputRef.current) inputRef.current.value = "";
     setMode(nextMode);
   }
@@ -124,6 +127,11 @@ export function useImageAnalysis() {
     analyze();
   }
 
+  function retryVideo() {
+    setVideoError(null);
+    analyze();
+  }
+
   return {
     mode,
     file,
@@ -142,6 +150,7 @@ export function useImageAnalysis() {
     removeFile,
     analyze,
     retryAfterError,
+    retryVideo,
     navigateHome: () => navigate("/"),
   };
 }

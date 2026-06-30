@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import type { AnalysisData } from "../../../share/hooks/api";
 import { getAnalysisById } from "../../../share/hooks/api";
@@ -56,11 +56,14 @@ export default function LinkAnalysisPage() {
   const [openItemId, setOpenItemId] = useState("");
   const { addHistory } = useAnalysisHistory();
 
-  useEffect(() => {
+  const loadData = useCallback(() => {
     if (!analysisId || isNaN(analysisId)) {
       setLoading(false);
       return;
     }
+
+    setLoading(true);
+    setFetchError(false);
 
     getAnalysisById(analysisId)
       .then((res) => {
@@ -74,7 +77,11 @@ export default function LinkAnalysisPage() {
       })
       .catch(() => setFetchError(true))
       .finally(() => setLoading(false));
-  }, [analysisId]);
+  }, [analysisId, addHistory]);
+
+  useEffect(() => {
+    loadData();
+  }, [loadData]);
 
   const finalScore = data?.totalScore ?? 0;
 
@@ -98,7 +105,7 @@ export default function LinkAnalysisPage() {
 
   if (loading) return <LinkResultSkeleton />;
 
-  if (!analysisId || isNaN(analysisId) || fetchError) {
+  if (!analysisId || isNaN(analysisId)) {
     return (
       <div className="flex min-h-screen flex-col items-center justify-center gap-5 px-6 animate-[fade-up_.28s_ease]">
         <div className="font-mono text-[10px] uppercase tracking-[0.22em] text-muted">No Result</div>
@@ -110,6 +117,31 @@ export default function LinkAnalysisPage() {
         >
           분석하러 가기
         </Link>
+      </div>
+    );
+  }
+
+  if (fetchError) {
+    return (
+      <div className="flex min-h-screen flex-col items-center justify-center gap-5 px-6 animate-[fade-up_.28s_ease]">
+        <div className="font-mono text-[10px] uppercase tracking-[0.22em] text-muted">Load Failed</div>
+        <p className="text-center text-lg font-semibold text-text">결과를 불러오지 못했습니다.</p>
+        <p className="text-center text-sm text-muted">네트워크 상태를 확인하거나 다시 시도해 주세요.</p>
+        <div className="mt-2 flex gap-3">
+          <button
+            type="button"
+            onClick={loadData}
+            className="rounded-2xl bg-accent px-6 py-3 text-sm font-bold text-white transition hover:bg-blue-600"
+          >
+            다시 시도
+          </button>
+          <Link
+            className="rounded-2xl border border-border px-6 py-3 text-sm font-semibold text-text transition hover:border-accent hover:text-accent"
+            to="/"
+          >
+            메인으로
+          </Link>
+        </div>
       </div>
     );
   }

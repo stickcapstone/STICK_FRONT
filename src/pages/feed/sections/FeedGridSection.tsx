@@ -1,3 +1,4 @@
+import { memo } from "react";
 import type { FeedItem } from "../../../data/data";
 
 interface FeedGridSectionProps {
@@ -25,7 +26,7 @@ function getReliability(score: number) {
   };
 }
 
-export default function FeedGridSection({ items }: FeedGridSectionProps) {
+function FeedGridSection({ items }: FeedGridSectionProps) {
   if (items.length === 0) {
     return (
       <div className="px-5 py-8 text-center text-[15px] text-(--muted) border border-dashed border-(--brd) rounded-xl bg-[rgba(15,20,28,0.35)]">
@@ -68,6 +69,10 @@ export default function FeedGridSection({ items }: FeedGridSectionProps) {
                 <img
                   src={item.thumbnailUrl}
                   alt={item.title}
+                  loading="lazy"
+                  decoding="async"
+                  width={400}
+                  height={400}
                   className="absolute inset-0 h-full w-full object-cover"
                 />
               ) : null}
@@ -112,3 +117,5 @@ export default function FeedGridSection({ items }: FeedGridSectionProps) {
     </div>
   );
 }
+
+export default memo(FeedGridSection);
