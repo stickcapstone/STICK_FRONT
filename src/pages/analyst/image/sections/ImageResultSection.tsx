@@ -5,11 +5,10 @@ interface ImageResultSectionProps {
 }
 
 export default function ImageResultSection({ result }: ImageResultSectionProps) {
-  const confidencePct = result.confidence <= 1
-    ? Math.round(result.confidence * 100)
-    : Math.round(result.confidence);
-
   const isAI = result.aiGenerated;
+  const rawPct = result.confidence > 1 ? Math.round(result.confidence) : Math.round(result.confidence * 100);
+  // confidence는 AI 생성 확률이므로, 판별 신뢰도는 방향에 맞게 계산
+  const confidencePct = isAI ? rawPct : Math.max(0, 100 - rawPct);
 
   return (
     <section className="w-full rounded-[28px] border border-border bg-panel p-6 animate-[fade-up_.28s_ease]">
@@ -35,7 +34,7 @@ export default function ImageResultSection({ result }: ImageResultSectionProps) 
 
       <div className="mb-5">
         <div className="mb-2 flex items-center justify-between font-mono text-[10px] text-muted">
-          <span>신뢰도</span>
+          <span>판별 신뢰도</span>
           <span>{confidencePct}%</span>
         </div>
         <div className="h-2 overflow-hidden rounded-full bg-base">
